@@ -1,0 +1,7 @@
+;;; SPDX-License-Identifier: GPL-3.0-or-later
+;; -*- mode: scheme; -*-
+
+(channel
+ (version 0)
+ (url "https://github.com/afistfullofash/afistfullofash.git")) ; the primary URL
+
