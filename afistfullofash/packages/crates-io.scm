@@ -214,7 +214,7 @@
 programs to collect structured, event-based diagnostic information.")
     (license license:expat)))
 
-(define-public rust-serde-json-1
+(define-public rust-serde-json-1.0.8
   (package
     (name "rust-serde-json")
     (version "1.0.82")
@@ -268,7 +268,7 @@ programs to collect structured, event-based diagnostic information.")
         ("rust-parking-lot" ,rust-parking-lot-0.12)
         ("rust-regex" ,rust-regex-1)
         ("rust-serde" ,rust-serde-1)
-        ("rust-serde-json" ,rust-serde-json-1)
+        ("rust-serde-json" ,rust-serde-json-1.0.8)
         ("rust-sharded-slab" ,rust-sharded-slab-0.1)
         ("rust-smallvec" ,rust-smallvec-1)
         ("rust-thread-local" ,rust-thread-local-1)
