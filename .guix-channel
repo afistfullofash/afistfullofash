@@ -3,5 +3,5 @@
 
 (channel
  (version 0)
- (url "https://github.com/afistfullofash/afistfullofash.git")) ; the primary URL
+ (url "https://github.com/afistfullofash/afistfullofash")) ; the primary URL
 
