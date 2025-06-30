@@ -45,7 +45,7 @@
 				 ("estimated_read_time" ,rust-estimated-read-time-1)
 				 ("regex" ,rust-regex-1)
 				 ("serde_regex" ,rust-serde-regex-1)
-				 ("serde_json" ,rust-serde-json-1.0.1)
+				 ("serde_json" ,rust-serde-json-1)
 				 ("tracing" ,rust-tracing-0.1.40)
 				 ("tracing-subscriber" ,rust-tracing-subscriber-0.3.18)
 				 ("humantime" ,rust-humantime-2))))
