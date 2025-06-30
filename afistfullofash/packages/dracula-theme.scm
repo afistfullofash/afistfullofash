@@ -2,9 +2,7 @@
   #:use-module (guix packages)
   #:use-module (guix git-download)
   #:use-module ((guix licenses) #:prefix license:)
-  #:use-module (guix build-system copy)
-
-  #:export (dracula-gtk-theme))
+  #:use-module (guix build-system copy))
 
 (define-public dracula-gtk-theme
   (package

@@ -4,9 +4,7 @@
   #:use-module (guix build-system font)
   #:use-module ((guix licenses) #:prefix license:)
   #:use-module (guix utils)
-  #:use-module (gnu packages node)
-
-  #:export (fonts-nerd-fonts-dejavu))
+  #:use-module (gnu packages node))
 
 (define-public fonts-nerd-fonts-dejavu
   (package
