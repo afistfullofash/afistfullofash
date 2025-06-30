@@ -214,6 +214,38 @@
 programs to collect structured, event-based diagnostic information.")
     (license license:expat)))
 
+(define-public rust-serde-json-1
+  (package
+    (name "rust-serde-json")
+    (version "1.0.82")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (crate-uri "serde_json" version))
+       (file-name (string-append name "-" version ".tar.gz"))
+       (sha256
+        (base32 "19vz3xw0yfaz8al3fskwpngjxr15whv9lnrcanc10zc0rpyw3hl2"))))
+    (build-system cargo-build-system)
+    (arguments
+     `(#:cargo-inputs (("rust-indexmap" ,rust-indexmap-2)
+                       ("rust-itoa" ,rust-itoa-1)
+                       ("rust-memchr" ,rust-memchr-2)
+                       ("rust-ryu" ,rust-ryu-1)
+                       ("rust-serde" ,rust-serde-1))
+       #:cargo-development-inputs (("rust-automod" ,rust-automod-1)
+                                   ("rust-indoc" ,rust-indoc-2)
+                                   ("rust-ref-cast" ,rust-ref-cast-1)
+                                   ("rust-rustversion" ,rust-rustversion-1)
+                                   ("rust-serde" ,rust-serde-1)
+                                   ("rust-serde-bytes" ,rust-serde-bytes-0.11)
+                                   ("rust-serde-derive" ,rust-serde-derive-1)
+                                   ("rust-serde-stacker" ,rust-serde-stacker-0.1)
+                                   ("rust-trybuild" ,rust-trybuild-1))))
+    (home-page "https://github.com/serde-rs/json")
+    (synopsis "JSON serialization file format")
+    (description "This package provides a JSON serialization file format.")
+    (license (list license:expat license:asl2.0))))
+
 (define-public rust-tracing-subscriber-0.3.18
   (package
     (name "rust-tracing-subscriber")
@@ -227,7 +259,7 @@ programs to collect structured, event-based diagnostic information.")
         (base32 "12vs1bwk4kig1l2qqjbbn2nm5amwiqmkcmnznylzmnfvjy6083xd"))))
     (build-system cargo-build-system)
     (arguments
-     `(#:tests? #f     ; use of undeclared crate or module `tracing_mock`
+     `(#:tests? #f  ; use of undeclared crate or module `tracing_mock`
        #:cargo-inputs
        (("rust-chrono" ,rust-chrono-0.4)
         ("rust-matchers" ,rust-matchers-0.1)
