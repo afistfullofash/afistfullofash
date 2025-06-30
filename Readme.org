@@ -1,0 +1,10 @@
+* afistfullofash's guix channel
+This provides the packages used by my [[https://github.com/afistfullofash/guix-config][guix-config]]. These should be eventually upstreamed to either guix or nonguix when I have time to clean up the definitions. External contributions are encouraged.
+
+Add the following to your [[file:~/.config/guix/channels.scm][~/.config/guix/channels.scm]]
+#+begin_src scheme
+  (channel
+     (name 'afistfullofash)
+     (url "https://github.com/afistfullofash/afistfullofash")
+     (branch "main"))
+#+end_src
