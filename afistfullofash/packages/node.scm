@@ -35,3 +35,33 @@
                               "deps/ngtcp2"
                               "deps/uv"
                               "deps/zlib"))))))))
+
+(define-public node-22.15
+  (package
+    (inherit node-lts)
+    (name "node-22.15")
+    (version "22.15.1")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append "https://nodejs.org/dist/v" version
+                                  "/node-v" version ".tar.gz"))
+              (sha256
+               (base32
+                "1gjpgbncllh11kwwajfx9gsrw3wkrw6wgyvkya1pg3w1z0ls1biq"))
+              (modules '((guix build utils)))
+              (snippet
+               '(begin
+                  ;; openssl.cnf is required for build.
+                  (for-each delete-file-recursively
+                            (find-files "deps/openssl"
+                                        (lambda (file stat)
+                                          (not (string-contains file "nodejs-openssl.cnf")))))
+                  ;; Remove bundled software, where possible
+                  (for-each delete-file-recursively
+                            '("deps/brotli"
+                              "deps/cares"
+                              "deps/icu-small"
+                              "deps/nghttp2"
+                              "deps/ngtcp2"
+                              "deps/uv"
+                              "deps/zlib"))))))))
