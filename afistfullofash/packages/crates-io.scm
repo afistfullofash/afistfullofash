@@ -7,11 +7,8 @@
   #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages glib)
   #:use-module (gnu packages gtk)
-  #:use-module (gnu packages crates-gtk)
-  #:use-module (gnu packages crates-graphics)
-  #:use-module (gnu packages crates-check)
-  #:use-module (gnu packages crates-shell)
-  #:use-module (gnu packages crates-io))
+  
+  #:use-module (past-crates packages crates-io))
 
 
 (define-public rust-const-format-0.2.31
