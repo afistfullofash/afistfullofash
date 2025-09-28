@@ -9,9 +9,11 @@
   #:use-module (gnu packages glib)
   #:use-module (gnu packages gtk)
 
-  #:use-module (afistfullofash packages rust-crates))
+  #:use-module (afistfullofash packages rust-crates)
 
-(define-public runst
+  #:export (runst))
+
+(define runst
   (package
     (name "runst")
     (version "0.1.7")
