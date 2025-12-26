@@ -2,11 +2,12 @@
   #:use-module ((guix licenses) #:prefix license:)
   #:use-module (guix packages)
   #:use-module (guix git-download)
-  #:use-module (guix build-system python)
+  #:use-module (guix build-system pyproject)
   
   #:use-module (gnu packages check)
   #:use-module (gnu packages mail)
 
+  #:use-module (gnu packages python-build)
   #:use-module (gnu packages python-web)
   #:use-module (gnu packages python-xyz)
 
@@ -25,9 +26,10 @@
        (sha256
         (base32
          "1da36mhzb7gzfw2xv80c3cnz7hr7xfm4h6zpmv46n6i8gvmrhzsk"))))
-    (build-system python-build-system)
+    (build-system pyproject-build-system)
     (native-inputs
-     (list python-pytest))
+     (list python-pytest
+	   python-setuptools))
     (propagated-inputs
      (list python-google-api-client
 	   python-google-auth-oauthlib
