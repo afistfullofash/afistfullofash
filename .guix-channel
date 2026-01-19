@@ -3,5 +3,10 @@
 
 (channel
  (version 0)
- (url "https://github.com/afistfullofash/afistfullofash")) ; the primary URL
+ (url "https://github.com/afistfullofash/afistfullofash")
+ (dependencies
+    (channel
+      (name nonguix)
+      (url "https://gitlab.com/nonguix/nonguix")
+      (branch "master"))))
 
