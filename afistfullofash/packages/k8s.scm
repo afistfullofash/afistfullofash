@@ -1,4 +1,4 @@
-(define-module (afistfullofash packages kustomize)
+(define-module (afistfullofash packages k8s)
   #:use-module (guix packages)
   #:use-module (guix download)
   #:use-module (guix gexp)
@@ -42,5 +42,35 @@
      "kustomize lets you customize raw, template-free YAML files for multiple purposes, leaving the original YAML untouched and usable as is.")
     (license license:asl2.0)))
 
-
-kustomize
+(define-public kubectl-convert
+  (package
+    (name "kubectl-convert")
+    (version "1.32.3")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+		    "https://dl.k8s.io/release/v" version "/bin/linux/amd64/kubectl-convert"))
+              (sha256
+               (base32
+		"1py331vnpvv9gd28vzrv2b158ii0dab9b2khwg1gjynxbjwv9wyy"))))
+    (build-system copy-build-system)
+    (arguments
+     (list
+      #:substitutable? #f
+      #:install-plan
+      #~'(("kubectl-convert" "bin/"))
+      #:phases
+      #~(modify-phases %standard-phases
+          (replace 'unpack
+            (lambda* (#:key source #:allow-other-keys)
+              (copy-file source "./kubectl-convert")
+              (chmod "kubectl-convert" #o644)))
+          (add-before 'install 'chmod
+            (lambda _
+              (chmod "kubectl-convert" #o555))))))
+    (home-page "https://github.com/kubernetes/kubectl")
+    (supported-systems '("x86_64-linux"))
+    (synopsis "kubectl-convert kubectl plugin")
+    (description
+     "Automatically convert CRD's to new versions")
+    (license license:asl2.0)))
