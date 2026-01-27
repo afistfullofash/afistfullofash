@@ -10,7 +10,7 @@
     (name "kustomize")
     (version "5.8.0")
     (source (origin
-              (method url-fetch)
+              (method url-fetch/tarbomb)
               (uri (string-append
 		    "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv"
 		    version
@@ -28,10 +28,6 @@
       #~'(("kustomize" "bin/"))
       #:phases
       #~(modify-phases %standard-phases
-          (replace 'unpack
-            (lambda* (#:key source #:allow-other-keys)
-              (copy-file source "./kustomize")
-              (chmod "kustomize" #o644)))
           (add-before 'install 'chmod
             (lambda _
               (chmod "kustomize" #o555))))))
