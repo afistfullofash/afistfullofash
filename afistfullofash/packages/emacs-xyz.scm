@@ -1,10 +1,14 @@
 (define-module (afistfullofash packages emacs-xyz)
-  #:use-module (guix packages)
+    
   #:use-module (guix build-system emacs)
+  #:use-module (guix download)
+  #:use-module (guix packages)
   #:use-module (guix git-download)
-  #:use-module ((guix licenses) #:prefix license:)
+  
   #:use-module (gnu packages emacs-build)
-  #:use-module (gnu packages emacs-xyz))
+  #:use-module (gnu packages emacs-xyz)
+
+  #:use-module ((guix licenses) #:prefix license:))
 
 (define-public emacs-lsp-scheme
   (package
@@ -54,3 +58,23 @@
        (file-name (git-file-name name version))
        (sha256
         (base32 "03xp4dvq3y3q9xyb6pm9m5gb756rvbxcqk52ind08n7prqv4w1lp"))))))
+
+(define-public emacs-darkman
+  (package
+    (name "emacs-darkman")
+    (version "1.1.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append
+	     "https://git.sr.ht/~grtcdr/darkman.el/archive/" version ".tar.gz"))
+       (sha256
+        (base32 "08vlx2nsvsc75fd8xvllc6dibw8yakys1q0a41hcl8sdcnprh26w"))))
+    (build-system emacs-build-system)
+    (arguments (list
+		#:tests? #f))
+    (home-page "https://darkman.grtcdr.tn/")
+    (synopsis "Darkman for Emacs")
+    (description
+     "Darkman for Emacs")
+    (license license:isc)))
