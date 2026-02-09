@@ -8,9 +8,12 @@
   #:use-module (gnu packages emacs-build)
   #:use-module (gnu packages emacs-xyz)
 
-  #:use-module ((guix licenses) #:prefix license:))
+  #:use-module ((guix licenses) #:prefix license:)
 
-(define-public emacs-lsp-scheme
+  #:export (emacs-lsp-scheme
+            emacs-darkman))
+
+(define emacs-lsp-scheme
   (package
     (name "emacs-lsp-scheme")
     (version "0.2.5")
@@ -42,24 +45,7 @@
      "This package provides Auto Complete and Company back-ends for PHP.")
     (license license:gpl3+)))
 
-
-
-(define-public emacs-nyan-mode-1.1.4
-  (package
-    (inherit emacs-nyan-mode)
-    (name "emacs-nyan-mode-1.1.4")
-    (version "1.1.4")
-    (source
-     (origin
-       (method git-fetch)
-       (uri (git-reference
-             (url "https://github.com/TeMPOraL/nyan-mode/")
-             (commit "09904af23adb839c6a9c1175349a1fb67f5b4370")))
-       (file-name (git-file-name name version))
-       (sha256
-        (base32 "03xp4dvq3y3q9xyb6pm9m5gb756rvbxcqk52ind08n7prqv4w1lp"))))))
-
-(define-public emacs-darkman
+(define emacs-darkman
   (package
     (name "emacs-darkman")
     (version "1.1.0")
