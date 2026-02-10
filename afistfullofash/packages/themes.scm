@@ -12,6 +12,7 @@
   #:use-module (afistfullofash packages utils)
   
   #:export (alacritty-dracula-theme
+	    alacritty-catppuccin-theme
 	    dunst-dracula-theme
 	    gtk-dracula-icons
 	    lsd-dracula-theme
@@ -109,6 +110,33 @@
       (synopsis "Dracula Alacritty Theme")
       (description "Dracula Alacritty Theme")
       (license license:expat))))
+
+(define alacritty-catppuccin-theme
+  (let ((commit "f6cb5a5c2b404cdaceaff193b9c52317f62c62f7")
+	(version "0.0.0")
+	(revision "0"))
+    (package
+      (name "alacritty-catppuccin-theme")
+      (version (git-version version revision commit))
+      (source (origin
+	       (method git-fetch)
+	       (uri (git-reference
+		      (url "https://github.com/catppuccin/alacritty.git")
+		      (commit commit)))
+	       (file-name (git-file-name name version))
+	       (sha256
+		(base32
+		 "1r2z223hza63v5lmzlg3022mlar67j3a2gh41rsaiqwja2wyiihz"))))
+      (build-system copy-build-system)
+      (arguments '(#:install-plan '(("catppuccin-frappe.toml" "catppuccin-frappe.toml")
+				    ("catppuccin-latte.toml" "catppuccin-latte.toml")
+				    ("catppuccin-macchiato.toml" "catppuccin-macchiato.toml")
+				    ("catppuccin-mocha.toml" "catppuccin-mocha.toml"))))
+      (home-page "https://github.com/catppuccin/alacritty")
+      (description "Catppuccin Theme for Alacritty")
+      (synopsis "Catppuccin Theme for Alacritty")
+      (license license:expat))))
+
 
 (define starship-dracula-theme
   (let ((commit "920e9f46ccc25beee15ed7fe0baddabdfeaaf92a")
