@@ -16,6 +16,7 @@
 	    gtk-dracula-icons
 	    lsd-dracula-theme
 	    qt5-dracula-theme
+	    starship-catppuccin-theme
 	    starship-dracula-theme
 	    xresources-dracula-theme
 	    gtk-dracula-theme))
@@ -133,6 +134,31 @@
       (synopsis "Dracula Theme for Starship")
       (license license:expat))))
 
+(define starship-catppuccin-theme
+  (let ((commit "5906cc369dd8207e063c0e6e2d27bd0c0b567cb8")
+	(version "0.0.0")
+	(revision "0"))
+    (package
+      (name "starship-catppuccin-theme")
+      (version (git-version version revision commit))
+      (source (origin
+	       (method git-fetch)
+	       (uri (git-reference
+		      (url "https://github.com/catppuccin/starship.git")
+		      (commit commit)))
+	       (file-name (git-file-name name version))
+	       (sha256
+		(base32
+		 "0j3bc9caf6ayg7m8s0hshypgqiiy8bm9kakxwa5ackk955nf7c8l"))))
+      (build-system copy-build-system)
+      (arguments '(#:install-plan '(("starship.toml" "starship.toml")
+				    ("themes" "themes"))))
+      (home-page "https://github.com/catppuccin/starship")
+      (description "Catppuccin Themes for Starship")
+      (synopsis "Catppuccin Themes for Starship")
+      (license license:expat))))
+
+
 (define lsd-dracula-theme
   (let ((commit "2b87711bdce8c89a882db720e4f47d95877f83a7")
 	(version "0.0.0")
@@ -201,3 +227,5 @@
       (synopsis "Dracula theme for dunst")
       (description "Dracula theme for dunst")
       (license license:expat))))
+
+starship-catppuccin-theme
