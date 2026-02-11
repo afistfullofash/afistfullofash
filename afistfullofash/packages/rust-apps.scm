@@ -1,4 +1,4 @@
-(define-module (afistfullofash packages runst)
+(define-module (afistfullofash packages rust-apps)
   #:use-module (guix packages)
   #:use-module (guix download)
   #:use-module (guix git-download)
