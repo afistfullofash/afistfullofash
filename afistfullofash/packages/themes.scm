@@ -1,91 +1,34 @@
 (define-module (afistfullofash packages themes)
   #:use-module (guix build-system copy)
-
+  #:use-module (guix build-system python)
+  #:use-module (guix build-system pyproject)
   #:use-module (guix download)
   #:use-module (guix git-download)
   #:use-module (guix packages)
-
+  
   #:use-module (gnu packages compression)
+  #:use-module (gnu packages python-build)
+  #:use-module (gnu packages check)
+  #:use-module (gnu packages web)
+  #:use-module (gnu packages inkscape)
+  #:use-module (gnu packages image)
+  #:use-module (gnu packages python-xyz)
 
   #:use-module ((guix licenses) #:prefix license:)
 
   #:use-module (afistfullofash packages utils)
   
-  #:export (alacritty-dracula-theme
-	    alacritty-catppuccin-theme
+  #:export (alacritty-catppuccin-theme
+	    alacritty-dracula-theme
 	    dunst-dracula-theme
+	    dunst-catppuccin-theme
 	    gtk-dracula-icons
+	    gtk-dracula-theme
 	    lsd-dracula-theme
 	    qt5-dracula-theme
 	    starship-catppuccin-theme
 	    starship-dracula-theme
-	    xresources-dracula-theme
-	    gtk-dracula-theme))
-
-(define gtk-dracula-theme
-  (package
-    (name "gtk-dracula-theme")
-    (version "4.0.0")
-    (source (origin
-	      (method url-fetch/xzbomb)
-	      (uri (string-append
-		    "https://github.com/dracula/gtk/releases/download/v"
-		    version
-		    "/Dracula.tar.xz"))
-	      (sha256
-	       (base32
-		"0vqvj600qk6anjnqm1lqh171vag8qy38c0r5qsnxsgr43c2x96qr"))))
-    (build-system copy-build-system)
-    (native-inputs (list xz))
-    (arguments
-     '(#:install-plan '(("Dracula" "Dracula")
-			("Dracula-slim-standard-buttons/" "Dracula-slim-standard-buttons/")
-			("Dracula-alt-style/" "Dracula-standard-buttons/")
-			("Dracula-slim/" "Dracula-slim/"))))
-    (home-page "https://draculatheme.com/gtk")
-    (synopsis "Dracula GTK Theme")
-    (description "Dracula GTK Theme")
-    (license license:gpl3)))
-
-(define gtk-dracula-icons
-  (package
-    (name "gtk-dracula-icons")
-    (version "0.0.0")
-    (source (origin
-	     (method url-fetch/zipbomb)
-	     (uri "https://github.com/dracula/gtk/files/5214870/Dracula.zip")
-	     (sha256
-	      (base32
-	       "1dnc1g1qw9r7glilw1gg11b4f6icfxckkjrj5rhmzzmlxwcjib9k"))))
-    (build-system copy-build-system)
-    (arguments '(#:install-plan '(("Dracula" "Dracula"))))
-    (home-page "https://draculatheme.com/gtk")
-    (synopsis "Dracula GTK Icons")
-    (description "Dracula GTK Icons")
-    (license license:gpl3)))
-
-(define qt5-dracula-theme
-  (let ((commit "7b25ee305365f6e62efb2c7aca3b4635622b778c")
-	(version "0.0.0")
-	(revision "0"))
-    (package
-      (name "qt5-dracula-theme")
-      (version (git-version version revision commit))
-      (source (origin
-	       (method git-fetch)
-	       (uri (git-reference
-		      (url "https://github.com/dracula/qt5.git")
-		      (commit commit)))
-	       (file-name (git-file-name name version))
-	       (sha256
-		(base32
-		 "00qlajbxj25w1bdhj8wc5r57g25gas6f1ax6wrzb4xcypw0j7xdm"))))
-      (build-system copy-build-system)
-      (arguments '(#:install-plan '(("Dracula.conf" "Dracula.conf"))))
-      (home-page "https://draculatheme.com/qt5")
-      (synopsis "Dracula QT5 Theme")
-      (description "Dracula QT5 Theme")
-      (license license:expat))))
+	    xresources-dracula-theme))
 
 (define alacritty-dracula-theme
   (let ((commit "c8a3a13404b78d520d04354e133b5075d9b785e1")
@@ -137,6 +80,206 @@
       (synopsis "Catppuccin Theme for Alacritty")
       (license license:expat))))
 
+(define dunst-dracula-theme
+  (let ((commit "907f345d81dba9566eff59dd89afb321118da180")
+	(revision "0")
+	(version "0.0.0"))
+    (package
+      (name "dunst-dracula-theme")
+      (version (git-version version revision commit))
+      (source (origin
+		(uri (git-reference
+		       (url "https://github.com/dracula/dunst.git")
+		       (commit commit)))
+		(file-name (git-file-name name version))
+		(method git-fetch)
+		(sha256
+		 (base32
+		  "0m8qzwlmacqk27l24iqyimyjgsz5ypmvs39hd5fl7if6b1vlcrwx"))))
+      (build-system copy-build-system)
+      (arguments '(#:install-plan '(("dunstrc" "dunstrc"))))
+      (home-page "https://draculatheme.com/dunst")
+      (synopsis "Dracula theme for dunst")
+      (description "Dracula theme for dunst")
+      (license license:expat))))
+
+(define dunst-catppuccin-theme
+  (let ((commit "5955cf0213d14a3494ec63580a81818b6f7caa66")
+	(revision "0")
+	(version "0.0.0"))
+    (package
+      (name "dunst-catppuccin-theme")
+      (version (git-version version revision commit))
+      (source (origin
+		(uri (git-reference
+		       (url "https://github.com/catppuccin/dunst.git")
+		       (commit commit)))
+		(file-name (git-file-name name version))
+		(method git-fetch)
+		(sha256
+		 (base32
+		  "1rpxrnhphcxm93s2wc7wbd9cxjmv79r2m6ip0a6rj7lh9v0ps6mc"))))
+      (build-system copy-build-system)
+      (arguments '(#:install-plan '(("themes/" "themes/"))))
+      (home-page "https://github.com/catppuccin/dunst")
+      (synopsis " Catppuccin themes for dunst")
+      (description "Catppuccin themes for dunst")
+      (license license:expat))))
+
+(define gtk-dracula-icons
+  (package
+    (name "gtk-dracula-icons")
+    (version "0.0.0")
+    (source (origin
+	     (method url-fetch/zipbomb)
+	     (uri "https://github.com/dracula/gtk/files/5214870/Dracula.zip")
+	     (sha256
+	      (base32
+	       "1dnc1g1qw9r7glilw1gg11b4f6icfxckkjrj5rhmzzmlxwcjib9k"))))
+    (build-system copy-build-system)
+    (arguments '(#:install-plan '(("Dracula" "Dracula"))))
+    (home-page "https://draculatheme.com/gtk")
+    (synopsis "Dracula GTK Icons")
+    (description "Dracula GTK Icons")
+    (license license:gpl3)))
+
+(define gtk-dracula-theme
+  (package
+    (name "gtk-dracula-theme")
+    (version "4.0.0")
+    (source (origin
+	      (method url-fetch/xzbomb)
+	      (uri (string-append
+		    "https://github.com/dracula/gtk/releases/download/v"
+		    version
+		    "/Dracula.tar.xz"))
+	      (sha256
+	       (base32
+		"0vqvj600qk6anjnqm1lqh171vag8qy38c0r5qsnxsgr43c2x96qr"))))
+    (build-system copy-build-system)
+    (native-inputs (list xz))
+    (arguments
+     '(#:install-plan '(("Dracula" "Dracula")
+			("Dracula-slim-standard-buttons/" "Dracula-slim-standard-buttons/")
+			("Dracula-alt-style/" "Dracula-standard-buttons/")
+			("Dracula-slim/" "Dracula-slim/"))))
+    (home-page "https://draculatheme.com/gtk")
+    (synopsis "Dracula GTK Theme")
+    (description "Dracula GTK Theme")
+    (license license:gpl3)))
+
+(define-public python-catppuccin
+  (package
+    (name "python-catppuccin")
+    (version "2.5.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "catppuccin" version))
+       (sha256
+        (base32 "0d38gjn6661pb9jl4bg6l698aw4llir44xacrg8nj8xw6nzz6d9h"))))
+    (build-system pyproject-build-system)
+    (native-inputs (list python-hatchling
+			 python-rich
+			 python-matplotlib
+			 python-pygments
+			 python-pytest))
+    
+    (home-page #f)
+    (synopsis "ð Soothing pastel theme for Python.")
+    (description "ð Soothing pastel theme for Python.")
+    (license #f)))
+
+(define gtk-catppuccin-theme
+  #f
+  ;; (package
+ ;;    (name "gtk-catppuccin-theme")
+ ;;    (version "1.0.3")
+ ;;    (source (origin
+ ;; 	      (method git-fetch)
+ ;; 	      (uri (git-reference
+ ;; 		    (url "https://github.com/catppuccin/gtk.git")
+ ;; 		    (commit (string-append   "v" version))))
+ ;; 	      (sha256
+ ;; 	       (base32
+ ;; 		"0vqvj600qk6anjnqm1lqh171vag8qy38c0r5qsnxsgr43c2x96qr"))))
+ ;;    (build-system pyproject-build-system)
+ ;;    (inputs (list python-catppuccin
+ ;; 		  sassc
+ ;; 		  inkscape
+ ;; 		  optipng))
+ ;;    (arguments
+ ;; (list
+ ;;  #:phases
+ ;;  #~(modify-phases %standard-phases
+ ;;      (replace 'build
+ ;;        (lambda* (#:key inputs #:allow-other-keys)
+ ;; 	  (let ((python (string-append (assoc-ref inputs "python")
+ ;; 				       "/bin/python"))))
+ ;;          ;; Generate assets
+ ;;          (invoke python "sources/patches/xfwm4/generate_assets.py")
+          
+ ;;          ;; Create releases directory
+ ;;          (mkdir-p "dist")
+          
+ ;;          ;; Build themes sequentially for reliability in the build container
+ ;;          (for-each (lambda (flavor)
+ ;;                      (format #t "Building catppuccin flavor: ~a...~%" flavor)
+ ;;                      (invoke python "./build.py" flavor 
+ ;;                              "--all-accents" "-d" (string-append (getcwd) "/dist")))
+ ;;                    '("mocha" "macchiato" "frappe" "latte")))))))
+ ;;    (home-page "https://github.com/catppuccin/gtk/")
+ ;;    (synopsis "Catppuccin GTK Theme")
+ ;;    (description "Catppuccin GTK Theme")
+ ;;    (license license:gpl3))
+  )
+
+(define lsd-dracula-theme
+  (let ((commit "2b87711bdce8c89a882db720e4f47d95877f83a7")
+	(version "0.0.0")
+	(revision "0")) 
+    (package
+      (name "lsd-dracula-theme")
+      (version (git-version version revision commit))
+      (source (origin
+	       (method git-fetch)
+	       (uri (git-reference
+		      (url "https://github.com/dracula/lsd.git")
+		      (commit commit)))
+	       (file-name (git-file-name name version))
+	       (sha256
+		(base32
+		 "10id0n5c9jyrah295dv2zahl97851kp24d513k3pyxbsy9nv0qml"))))
+      (build-system copy-build-system)
+      (arguments '(#:install-plan '(("colors.yaml" "colors.yaml")
+				    ("config.yaml" "config.yaml"))))
+      (home-page "https://draculatheme.com/lsd")
+      (description "Dracula theme for lsd")
+      (synopsis "Dracula Theme for lsd")
+      (license license:expat))))
+
+(define qt5-dracula-theme
+  (let ((commit "7b25ee305365f6e62efb2c7aca3b4635622b778c")
+	(version "0.0.0")
+	(revision "0"))
+    (package
+      (name "qt5-dracula-theme")
+      (version (git-version version revision commit))
+      (source (origin
+	       (method git-fetch)
+	       (uri (git-reference
+		      (url "https://github.com/dracula/qt5.git")
+		      (commit commit)))
+	       (file-name (git-file-name name version))
+	       (sha256
+		(base32
+		 "00qlajbxj25w1bdhj8wc5r57g25gas6f1ax6wrzb4xcypw0j7xdm"))))
+      (build-system copy-build-system)
+      (arguments '(#:install-plan '(("Dracula.conf" "Dracula.conf"))))
+      (home-page "https://draculatheme.com/qt5")
+      (synopsis "Dracula QT5 Theme")
+      (description "Dracula QT5 Theme")
+      (license license:expat))))
 
 (define starship-dracula-theme
   (let ((commit "920e9f46ccc25beee15ed7fe0baddabdfeaaf92a")
@@ -186,31 +329,6 @@
       (synopsis "Catppuccin Themes for Starship")
       (license license:expat))))
 
-
-(define lsd-dracula-theme
-  (let ((commit "2b87711bdce8c89a882db720e4f47d95877f83a7")
-	(version "0.0.0")
-	(revision "0")) 
-    (package
-      (name "lsd-dracula-theme")
-      (version (git-version version revision commit))
-      (source (origin
-	       (method git-fetch)
-	       (uri (git-reference
-		      (url "https://github.com/dracula/lsd.git")
-		      (commit commit)))
-	       (file-name (git-file-name name version))
-	       (sha256
-		(base32
-		 "10id0n5c9jyrah295dv2zahl97851kp24d513k3pyxbsy9nv0qml"))))
-      (build-system copy-build-system)
-      (arguments '(#:install-plan '(("colors.yaml" "colors.yaml")
-				    ("config.yaml" "config.yaml"))))
-      (home-page "https://draculatheme.com/lsd")
-      (description "Dracula theme for lsd")
-      (synopsis "Dracula Theme for lsd")
-      (license license:expat))))
-
 (define xresources-dracula-theme
   (let ((commit "539ef24e9b0c5498a82d59bfa2bad9b618d832a3")
 	(version "0.0.0")
@@ -232,28 +350,3 @@
       (description "Dracula theme for Xresources")
       (synopsis "Dracula theme for Xresources")
       (license license:expat))))
-
-(define dunst-dracula-theme
-  (let ((commit "907f345d81dba9566eff59dd89afb321118da180")
-	(revision "0")
-	(version "0.0.0"))
-    (package
-      (name "dunst-dracula-theme")
-      (version (git-version version revision commit))
-      (source (origin
-		(uri (git-reference
-		       (url "https://github.com/dracula/dunst.git")
-		       (commit commit)))
-		(file-name (git-file-name name version))
-		(method git-fetch)
-		(sha256
-		 (base32
-		  "0m8qzwlmacqk27l24iqyimyjgsz5ypmvs39hd5fl7if6b1vlcrwx"))))
-      (build-system copy-build-system)
-      (arguments '(#:install-plan '(("dunstrc" "dunstrc"))))
-      (home-page "https://draculatheme.com/dunst")
-      (synopsis "Dracula theme for dunst")
-      (description "Dracula theme for dunst")
-      (license license:expat))))
-
-starship-catppuccin-theme
