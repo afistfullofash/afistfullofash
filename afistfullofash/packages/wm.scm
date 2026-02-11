@@ -29,6 +29,7 @@
     (,sbcl-stumpwm-battery-portable . "battery-portable")
     (,sbcl-stumpwm-notify . "notify")
     (,sbcl-stumpwm-pamixer . "pamixer")
+    (,sbcl-stumpwm-cpu . "cpu")
     (,sbcl-stumpwm-ttf-fonts . "ttf-fonts")
     (,sbcl-clx-truetype . "clx-truetype")
     (,sbcl-slynk . "slynk")))
