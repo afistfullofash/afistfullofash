@@ -5,11 +5,15 @@
   #:use-module (guix download)
   #:use-module (guix git-download)
   #:use-module (guix packages)
+  #:use-module (guix gexp)
+  #:use-module (guix build utils)
   
   #:use-module (gnu packages compression)
   #:use-module (gnu packages python-build)
+  #:use-module (gnu packages version-control)
   #:use-module (gnu packages check)
   #:use-module (gnu packages web)
+  #:use-module (gnu packages linux)
   #:use-module (gnu packages inkscape)
   #:use-module (gnu packages image)
   #:use-module (gnu packages python-xyz)
@@ -24,6 +28,7 @@
 	    dunst-catppuccin-theme
 	    gtk-dracula-icons
 	    gtk-dracula-theme
+	    gtk-catppuccin-theme
 	    lsd-dracula-theme
 	    qt5-dracula-theme
 	    starship-catppuccin-theme
@@ -188,51 +193,94 @@
     (home-page #f)
     (synopsis "ð Soothing pastel theme for Python.")
     (description "ð Soothing pastel theme for Python.")
-    (license #f)))
+    (license license:expat)))
+
+(define gtk-colloid-theme-src
+  (let ((name "gtk-colloid-theme-src")
+	(commit "1a13048ea1bd4a6cb9b293b537afd16bf267e773"))
+    (origin
+      (method git-fetch)
+      (uri (git-reference
+	    (url "https://github.com/vinceliuice/Colloid-gtk-theme.git")
+	    (commit commit)))
+      (file-name (git-file-name name commit))
+      (sha256
+       (base32
+	"1ixdqrwvxxjl6caqfcq6fxhlzgmqwbwybqjnhvd81vs84cw2i0fd")))))
 
 (define gtk-catppuccin-theme
-  #f
-  ;; (package
- ;;    (name "gtk-catppuccin-theme")
- ;;    (version "1.0.3")
- ;;    (source (origin
- ;; 	      (method git-fetch)
- ;; 	      (uri (git-reference
- ;; 		    (url "https://github.com/catppuccin/gtk.git")
- ;; 		    (commit (string-append   "v" version))))
- ;; 	      (sha256
- ;; 	       (base32
- ;; 		"0vqvj600qk6anjnqm1lqh171vag8qy38c0r5qsnxsgr43c2x96qr"))))
- ;;    (build-system pyproject-build-system)
- ;;    (inputs (list python-catppuccin
- ;; 		  sassc
- ;; 		  inkscape
- ;; 		  optipng))
- ;;    (arguments
- ;; (list
- ;;  #:phases
- ;;  #~(modify-phases %standard-phases
- ;;      (replace 'build
- ;;        (lambda* (#:key inputs #:allow-other-keys)
- ;; 	  (let ((python (string-append (assoc-ref inputs "python")
- ;; 				       "/bin/python"))))
- ;;          ;; Generate assets
- ;;          (invoke python "sources/patches/xfwm4/generate_assets.py")
-          
- ;;          ;; Create releases directory
- ;;          (mkdir-p "dist")
-          
- ;;          ;; Build themes sequentially for reliability in the build container
- ;;          (for-each (lambda (flavor)
- ;;                      (format #t "Building catppuccin flavor: ~a...~%" flavor)
- ;;                      (invoke python "./build.py" flavor 
- ;;                              "--all-accents" "-d" (string-append (getcwd) "/dist")))
- ;;                    '("mocha" "macchiato" "frappe" "latte")))))))
- ;;    (home-page "https://github.com/catppuccin/gtk/")
- ;;    (synopsis "Catppuccin GTK Theme")
- ;;    (description "Catppuccin GTK Theme")
- ;;    (license license:gpl3))
-  )
+  (package
+    (name "gtk-catppuccin-theme")
+    (version "1.0.3")
+    (source (origin
+	      (method git-fetch)
+	      (uri (git-reference
+		    (url "https://github.com/catppuccin/gtk.git")
+		    (commit (string-append   "v" version))))
+	      (file-name (git-file-name name version))
+	      (sha256
+	       (base32
+		"0vwa2paicvyb3ii3j97cg47n6rs75jsjx7g159a3wmwmkasrkb7h"))))
+    (build-system pyproject-build-system)
+    (inputs (list python-catppuccin
+		  sassc
+		  inkscape
+		  optipng
+		  gtk-colloid-theme-src))
+    (native-inputs (list util-linux
+			 git-minimal))
+    (arguments
+     (list
+      #:phases
+      #~(modify-phases %standard-phases
+	  (add-after 'unpack 'replace-colloid-submodule
+            (lambda* (#:key outputs #:allow-other-keys)
+	      (let ((colloid-dir "./sources/colloid"))
+		(delete-file-recursively colloid-dir)
+		(copy-recursively #$gtk-colloid-theme-src colloid-dir)
+		(for-each make-file-writable (find-files colloid-dir)))))
+	  (replace 'build
+            (lambda* (#:key inputs outputs #:allow-other-keys)
+	      (let ((out "./dist")
+		    (python (string-append (assoc-ref inputs "python")
+					   "/bin/python")))
+		(mkdir-p out)
+		(invoke python "sources/patches/xfwm4/generate_assets.py")
+
+		
+		;; Build themes sequentially for reliability in the build container
+		(for-each (lambda (flavor)
+			    (format #t "Building catppuccin flavor: ~a...~%" flavor)
+			    (unless (zero? (system* python "./build.py" flavor 
+				       "--all-accents" "-d" out))
+			      (error (format #f "Failed to build catppucin flavor ~a" flavour))))
+			  '("mocha" "macchiato" "frappe" "latte")))))
+	  (replace 'install
+            (lambda* (#:key outputs #:allow-other-keys)
+              (use-modules (guix build utils))
+	      (let* ((out (assoc-ref outputs "out")))
+                (mkdir-p out)
+                (copy-recursively "dist" out))))
+	  (delete 'add-install-to-pythonpath)
+	  (delete 'add-install-to-path)
+	  (delete 'create-entrypoints)
+	  (delete 'wrap)
+	  (delete 'sanity-check)
+	  (delete 'compile-bytecode)
+	  (delete 'patch-shebangs)
+	  (delete 'rename-pth-file)
+	  (delete 'validate-runpath)
+	  (delete 'validate-documentation-location)
+	  (delete 'delete-info-dir-file)
+	  (delete 'patch-dot-desktop-files)
+	  (delete 'make-dynamic-linker-cache)
+	  (delete 'install-license-files)
+	  (delete 'reset-gzip-timestamps)
+	  (delete 'compress-documentation))))
+    (home-page "https://github.com/catppuccin/gtk/")
+    (synopsis "Catppuccin GTK Theme")
+    (description "Catppuccin GTK Theme")
+    (license license:gpl3)))
 
 (define lsd-dracula-theme
   (let ((commit "2b87711bdce8c89a882db720e4f47d95877f83a7")
