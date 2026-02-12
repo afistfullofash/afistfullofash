@@ -10,6 +10,7 @@
   #:export (terraform
 	    opentofu
 	    opentofu-1-11-3
+	    opentofu-1-11-4
 	    opentofu-terraform-wrapper))
 
 (define terraform
@@ -50,10 +51,28 @@
    (description
     "OpenTofu is an OSS tool for building, changing, and versioning infrastructure safely and efficiently. OpenTofu can manage existing and popular service providers as well as custom in-house solutions.")
    (license license:mpl2.0)))
+
+(define opentofu-1-11-4
+  (package
+   (name "opentofu")
+   (version "1.11.4")
+   (source (origin
+             (method url-fetch/tarbomb)
+	     (uri (string-append "https://github.com/opentofu/opentofu/releases/download/v" version "/tofu_" version "_linux_amd64.tar.gz"))
+            (sha256
+             (base32
+	      "1z8fnv9n1vd4bjnz20mb2qqw07j991fazw6l9zjw758hjn0l0x0d"))))
+   (build-system copy-build-system)
+   (arguments
+    '(#:install-plan '(("tofu" "bin/tofu"))))
    (home-page "https://opentofu.org/")
+   (supported-systems '("x86_64-linux"))
+   (synopsis "OpenTofu is an OSS tool for building, changing, and versioning infrastructure safely and efficiently. OpenTofu can manage existing and popular service providers as well as custom in-house solutions.")
+   (description
+    "OpenTofu is an OSS tool for building, changing, and versioning infrastructure safely and efficiently. OpenTofu can manage existing and popular service providers as well as custom in-house solutions.")
    (license license:mpl2.0)))
 
-(define opentofu opentofu-1-11-3)
+(define opentofu opentofu-1-11-4)
 
 (define opentofu-terraform-wrapper
   (package
