@@ -39,7 +39,7 @@
 (define alacritty-dracula-theme
   (let ((commit "c8a3a13404b78d520d04354e133b5075d9b785e1")
 	(version "0.0.0")
-	(revision "0"))
+	(revision "1"))
     (package
       (name "alacritty-dracula-theme")
       (version (git-version version revision commit))
@@ -288,7 +288,7 @@
 (define lsd-dracula-theme
   (let ((commit "2b87711bdce8c89a882db720e4f47d95877f83a7")
 	(version "0.0.0")
-	(revision "0")) 
+	(revision "1")) 
     (package
       (name "lsd-dracula-theme")
       (version (git-version version revision commit))
@@ -312,7 +312,7 @@
 (define qt5-dracula-theme
   (let ((commit "7b25ee305365f6e62efb2c7aca3b4635622b778c")
 	(version "0.0.0")
-	(revision "0"))
+	(revision "1"))
     (package
       (name "qt5-dracula-theme")
       (version (git-version version revision commit))
@@ -335,7 +335,7 @@
 (define starship-dracula-theme
   (let ((commit "920e9f46ccc25beee15ed7fe0baddabdfeaaf92a")
 	(version "0.0.0")
-	(revision "0"))
+	(revision "1"))
     (package
       (name "starship-dracula-theme")
       (version (git-version version revision commit))
@@ -359,7 +359,7 @@
 (define starship-catppuccin-theme
   (let ((commit "5906cc369dd8207e063c0e6e2d27bd0c0b567cb8")
 	(version "0.0.0")
-	(revision "0"))
+	(revision "1"))
     (package
       (name "starship-catppuccin-theme")
       (version (git-version version revision commit))
@@ -383,7 +383,7 @@
 (define xresources-dracula-theme
   (let ((commit "539ef24e9b0c5498a82d59bfa2bad9b618d832a3")
 	(version "0.0.0")
-	(revision "0" ))
+	(revision "1"))
     (package
       (name "xresources-dracula-theme")
       (version (git-version version revision commit))
