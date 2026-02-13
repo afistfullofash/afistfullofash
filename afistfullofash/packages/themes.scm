@@ -386,7 +386,7 @@
 (define starship-catppuccin-theme
   (let ((commit "5906cc369dd8207e063c0e6e2d27bd0c0b567cb8")
 	(version "0.0.0")
-	(revision "1"))
+	(revision "2"))
     (package
       (name "starship-catppuccin-theme")
       (version (git-version version revision commit))
@@ -400,8 +400,8 @@
 		(base32
 		 "0j3bc9caf6ayg7m8s0hshypgqiiy8bm9kakxwa5ackk955nf7c8l"))))
       (build-system copy-build-system)
-      (arguments '(#:install-plan '(("starship.toml" "/share/themes/catppuccin/starship/")
-				    ("themes" "/share/themes/catppuccin/starship/"))))
+      (arguments '(#:install-plan '(("starship.toml" "share/themes/catppuccin/starship/")
+				    ("themes/" "share/themes/catppuccin/starship/"))))
       (home-page "https://github.com/catppuccin/starship")
       (description "Catppuccin Themes for Starship")
       (synopsis "Catppuccin Themes for Starship")
