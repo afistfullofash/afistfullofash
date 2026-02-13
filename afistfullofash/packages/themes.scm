@@ -383,7 +383,7 @@
 (define xresources-dracula-theme
   (let ((commit "539ef24e9b0c5498a82d59bfa2bad9b618d832a3")
 	(version "0.0.0")
-	(revision "1"))
+	(revision "2"))
     (package
       (name "xresources-dracula-theme")
       (version (git-version version revision commit))
@@ -396,7 +396,7 @@
 	       (sha256
 		(base32 "1dkfa2q392vy7ky5kx0vd44xcb9c7x15z38x4acfma3f16q6vyg9"))))
       (build-system copy-build-system)
-      (arguments '(#:install-plan '(("Xresources" "/share/themes/catppuccin/xresources/"))))
+      (arguments '(#:install-plan '(("Xresources" "/share/themes/Dracula/xresources/"))))
       (home-page "https://draculatheme.com/xresources")
       (description "Dracula theme for Xresources")
       (synopsis "Dracula theme for Xresources")
