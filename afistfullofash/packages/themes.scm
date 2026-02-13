@@ -255,7 +255,7 @@
 			    (format #t "Building catppuccin flavor: ~a...~%" flavor)
 			    (unless (zero? (system* python "./build.py" flavor 
 				       "--all-accents" "-d" out))
-			      (error (format #f "Failed to build catppucin flavor ~a" flavour))))
+			      (error (format #f "Failed to build catppuccin flavor ~a" flavour))))
 			  '("mocha" "macchiato" "frappe" "latte")))))
 	  (replace 'install
             (lambda* (#:key outputs #:allow-other-keys)
@@ -373,8 +373,8 @@
 		(base32
 		 "0j3bc9caf6ayg7m8s0hshypgqiiy8bm9kakxwa5ackk955nf7c8l"))))
       (build-system copy-build-system)
-      (arguments '(#:install-plan '(("starship.toml" "/share/themes/catppucin/starship/")
-				    ("themes" "/share/themes/catppucin/starship/"))))
+      (arguments '(#:install-plan '(("starship.toml" "/share/themes/catppuccin/starship/")
+				    ("themes" "/share/themes/catppuccin/starship/"))))
       (home-page "https://github.com/catppuccin/starship")
       (description "Catppuccin Themes for Starship")
       (synopsis "Catppuccin Themes for Starship")
@@ -396,7 +396,7 @@
 	       (sha256
 		(base32 "1dkfa2q392vy7ky5kx0vd44xcb9c7x15z38x4acfma3f16q6vyg9"))))
       (build-system copy-build-system)
-      (arguments '(#:install-plan '(("Xresources" "/share/themes/catppucin/xresources/"))))
+      (arguments '(#:install-plan '(("Xresources" "/share/themes/catppuccin/xresources/"))))
       (home-page "https://draculatheme.com/xresources")
       (description "Dracula theme for Xresources")
       (synopsis "Dracula theme for Xresources")
