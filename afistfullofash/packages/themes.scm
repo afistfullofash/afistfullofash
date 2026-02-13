@@ -35,6 +35,7 @@
 	    starship-dracula-theme
 	    xresources-dracula-theme))
 
+
 (define alacritty-dracula-theme
   (let ((commit "c8a3a13404b78d520d04354e133b5075d9b785e1")
 	(version "0.0.0")
@@ -53,7 +54,7 @@
 	  (base32
 	   "1pmk7m2bcwmnmhrbvnnm2znmyyh3vp42vvl1phvfbkz5yqz5jf2b"))))
       (build-system copy-build-system)
-      (arguments '(#:install-plan '(("dracula.toml" "dracula.toml"))))
+      (arguments '(#:install-plan '(("dracula.toml" "/share/themes/Dracula/alacritty/"))))
       (home-page "https://draculatheme.com/alacritty")
       (synopsis "Dracula Alacritty Theme")
       (description "Dracula Alacritty Theme")
@@ -76,10 +77,10 @@
 		(base32
 		 "1r2z223hza63v5lmzlg3022mlar67j3a2gh41rsaiqwja2wyiihz"))))
       (build-system copy-build-system)
-      (arguments '(#:install-plan '(("catppuccin-frappe.toml" "catppuccin-frappe.toml")
-				    ("catppuccin-latte.toml" "catppuccin-latte.toml")
-				    ("catppuccin-macchiato.toml" "catppuccin-macchiato.toml")
-				    ("catppuccin-mocha.toml" "catppuccin-mocha.toml"))))
+      (arguments '(#:install-plan '(("catppuccin-frappe.toml" "/share/themes/catppuccin/alacritty/")
+				    ("catppuccin-latte.toml" "/share/themes/catppuccin/alacritty/")
+				    ("catppuccin-macchiato.toml" "/share/themes/catppuccin/alacritty/")
+				    ("catppuccin-mocha.toml" "/share/themes/catppuccin/alacritty/"))))
       (home-page "https://github.com/catppuccin/alacritty")
       (description "Catppuccin Theme for Alacritty")
       (synopsis "Catppuccin Theme for Alacritty")
@@ -102,7 +103,7 @@
 		 (base32
 		  "0m8qzwlmacqk27l24iqyimyjgsz5ypmvs39hd5fl7if6b1vlcrwx"))))
       (build-system copy-build-system)
-      (arguments '(#:install-plan '(("dunstrc" "dunstrc"))))
+      (arguments '(#:install-plan '(("dunstrc" "/share/themes/Dracula/dunst/dunstrc"))))
       (home-page "https://draculatheme.com/dunst")
       (synopsis "Dracula theme for dunst")
       (description "Dracula theme for dunst")
@@ -125,7 +126,7 @@
 		 (base32
 		  "1rpxrnhphcxm93s2wc7wbd9cxjmv79r2m6ip0a6rj7lh9v0ps6mc"))))
       (build-system copy-build-system)
-      (arguments '(#:install-plan '(("themes/" "themes/"))))
+      (arguments '(#:install-plan '(("themes/" "/share/themes/cattapucin/dunst/"))))
       (home-page "https://github.com/catppuccin/dunst")
       (synopsis " Catppuccin themes for dunst")
       (description "Catppuccin themes for dunst")
@@ -142,7 +143,7 @@
 	      (base32
 	       "1dnc1g1qw9r7glilw1gg11b4f6icfxckkjrj5rhmzzmlxwcjib9k"))))
     (build-system copy-build-system)
-    (arguments '(#:install-plan '(("Dracula" "Dracula"))))
+    (arguments '(#:install-plan '(("Dracula" "/share/icons/Dracula"))))
     (home-page "https://draculatheme.com/gtk")
     (synopsis "Dracula GTK Icons")
     (description "Dracula GTK Icons")
@@ -164,10 +165,11 @@
     (build-system copy-build-system)
     (native-inputs (list xz))
     (arguments
-     '(#:install-plan '(("Dracula" "Dracula")
-			("Dracula-slim-standard-buttons/" "Dracula-slim-standard-buttons/")
-			("Dracula-alt-style/" "Dracula-standard-buttons/")
-			("Dracula-slim/" "Dracula-slim/"))))
+     '(#:install-plan '(("Dracula" "/share/themes/")
+			("Dracula-slim-standard-buttons" "/share/themes/")
+			("Dracula-standard-buttons" "/share/themes/")
+			("Dracula-alt-style" "/share/themes/")
+			("Dracula-slim/" "/share/themes/"))))
     (home-page "https://draculatheme.com/gtk")
     (synopsis "Dracula GTK Theme")
     (description "Dracula GTK Theme")
@@ -258,7 +260,8 @@
 	  (replace 'install
             (lambda* (#:key outputs #:allow-other-keys)
               (use-modules (guix build utils))
-	      (let* ((out (assoc-ref outputs "out")))
+	      (let* ((out (assoc-ref outputs "out"))
+		     (theme-out-dir (string-append out "/share/themes/")))
                 (mkdir-p out)
                 (copy-recursively "dist" out))))
 	  (delete 'add-install-to-pythonpath)
@@ -299,8 +302,8 @@
 		(base32
 		 "10id0n5c9jyrah295dv2zahl97851kp24d513k3pyxbsy9nv0qml"))))
       (build-system copy-build-system)
-      (arguments '(#:install-plan '(("colors.yaml" "colors.yaml")
-				    ("config.yaml" "config.yaml"))))
+      (arguments '(#:install-plan '(("colors.yaml" "/share/themes/Dracula/lsd/")
+				    ("config.yaml" "/share/themes/Dracula/lsd/"))))
       (home-page "https://draculatheme.com/lsd")
       (description "Dracula theme for lsd")
       (synopsis "Dracula Theme for lsd")
@@ -323,7 +326,7 @@
 		(base32
 		 "00qlajbxj25w1bdhj8wc5r57g25gas6f1ax6wrzb4xcypw0j7xdm"))))
       (build-system copy-build-system)
-      (arguments '(#:install-plan '(("Dracula.conf" "Dracula.conf"))))
+      (arguments '(#:install-plan '(("Dracula.conf" "share/color-schemes/"))))
       (home-page "https://draculatheme.com/qt5")
       (synopsis "Dracula QT5 Theme")
       (description "Dracula QT5 Theme")
@@ -346,8 +349,8 @@
 		(base32
 		 "13i6alr7djb9h3vzav199i2kkxmzn004815z5cbc41lf7xvx2nc0"))))
       (build-system copy-build-system)
-      (arguments '(#:install-plan '(("starship.theme.toml" "starship.theme.toml")
-				    ("starship.toml" "starship.toml"))))
+      (arguments '(#:install-plan '(("starship.theme.toml" "/share/themes/Dracula/starship/")
+				    ("starship.toml" "/share/themes/Dracula/starship/"))))
       (home-page "https://draculatheme.com/starship")
       (description "Dracula Theme for Starship")
       (synopsis "Dracula Theme for Starship")
@@ -370,8 +373,8 @@
 		(base32
 		 "0j3bc9caf6ayg7m8s0hshypgqiiy8bm9kakxwa5ackk955nf7c8l"))))
       (build-system copy-build-system)
-      (arguments '(#:install-plan '(("starship.toml" "starship.toml")
-				    ("themes" "themes"))))
+      (arguments '(#:install-plan '(("starship.toml" "/share/themes/catppucin/starship/")
+				    ("themes" "/share/themes/catppucin/starship/"))))
       (home-page "https://github.com/catppuccin/starship")
       (description "Catppuccin Themes for Starship")
       (synopsis "Catppuccin Themes for Starship")
@@ -393,7 +396,7 @@
 	       (sha256
 		(base32 "1dkfa2q392vy7ky5kx0vd44xcb9c7x15z38x4acfma3f16q6vyg9"))))
       (build-system copy-build-system)
-      (arguments '(#:install-plan '(("Xresources" "Xresources"))))
+      (arguments '(#:install-plan '(("Xresources" "/share/themes/catppucin/xresources/"))))
       (home-page "https://draculatheme.com/xresources")
       (description "Dracula theme for Xresources")
       (synopsis "Dracula theme for Xresources")
