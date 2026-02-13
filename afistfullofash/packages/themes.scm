@@ -63,7 +63,7 @@
 (define alacritty-catppuccin-theme
   (let ((commit "f6cb5a5c2b404cdaceaff193b9c52317f62c62f7")
 	(version "0.0.0")
-	(revision "0"))
+	(revision "1"))
     (package
       (name "alacritty-catppuccin-theme")
       (version (git-version version revision commit))
