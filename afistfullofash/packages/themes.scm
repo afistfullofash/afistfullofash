@@ -28,6 +28,9 @@
 	    dunst-catppuccin-theme
 	    gtk-dracula-icons
 	    gtk-dracula-theme
+	    gtk-dracula-theme-4
+	    gtk-dracula-theme-2026
+	    dracula-cursors
 	    gtk-catppuccin-theme
 	    lsd-dracula-theme
 	    qt5-dracula-theme
@@ -143,37 +146,61 @@
 	      (base32
 	       "1dnc1g1qw9r7glilw1gg11b4f6icfxckkjrj5rhmzzmlxwcjib9k"))))
     (build-system copy-build-system)
-    (arguments '(#:install-plan '(("Dracula" "/share/icons/Dracula"))))
+    (arguments '(#:install-plan '(("Dracula" "share/icons/Dracula"))))
     (home-page "https://draculatheme.com/gtk")
     (synopsis "Dracula GTK Icons")
     (description "Dracula GTK Icons")
     (license license:gpl3)))
 
-(define gtk-dracula-theme
+(define gtk-dracula-theme-4
   (package
     (name "gtk-dracula-theme")
     (version "4.0.0")
-    (source (origin
-	      (method url-fetch/xzbomb)
-	      (uri (string-append
-		    "https://github.com/dracula/gtk/releases/download/v"
-		    version
-		    "/Dracula.tar.xz"))
-	      (sha256
-	       (base32
-		"0vqvj600qk6anjnqm1lqh171vag8qy38c0r5qsnxsgr43c2x96qr"))))
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+	      (url "https://github.com/dracula/gtk.git")
+	      (commit (string-append "v" version))))
+       (file-name (git-file-name name version))
+       (sha256
+	(base32
+	 "0p57lpv9023byqy31j5lcv7z0g720as34g11vpffagfdc178dzvq"))))
     (build-system copy-build-system)
-    (native-inputs (list xz))
     (arguments
-     '(#:install-plan '(("Dracula" "/share/themes/")
-			("Dracula-slim-standard-buttons" "/share/themes/")
-			("Dracula-standard-buttons" "/share/themes/")
-			("Dracula-alt-style" "/share/themes/")
-			("Dracula-slim/" "/share/themes/"))))
+     '(#:install-plan '(("." "share/themes/Dracula"))))
     (home-page "https://draculatheme.com/gtk")
     (synopsis "Dracula GTK Theme")
     (description "Dracula GTK Theme")
     (license license:gpl3)))
+
+(define gtk-dracula-theme gtk-dracula-theme-4)
+
+(define gtk-dracula-theme-2026
+  (let ((commit "d4163a5e6e598053567038c53777bf7682ecd17f")
+	(version "4.0.0")
+	(revision "2026"))
+    (package
+      (inherit gtk-dracula-theme-4)
+      (version (git-version version revision commit))
+      (source
+       (origin
+	 (method git-fetch)
+	 (uri (git-reference
+		(url "https://github.com/dracula/gtk.git")
+		(commit commit)))
+	 (file-name (git-file-name "gtk-dracula-theme" commit))
+
+	 (sha256
+	  (base32
+	   "05j58zhbw5m54pw5wxqbs4r1cg88zvc8fian3v15q2fk7gq4ia8m")))))))
+
+(define dracula-cursors
+  (package
+    (inherit gtk-dracula-theme-2026)
+    (name "dracula-cursors")
+    (arguments
+     '(#:install-plan '(("kde/cursors/Dracula-cursors" "share/icons/"))))))
 
 (define-public python-catppuccin
   (package
