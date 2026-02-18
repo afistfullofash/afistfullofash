@@ -2,12 +2,14 @@
   #:use-module (guix build-system copy)
   #:use-module (guix build-system python)
   #:use-module (guix build-system pyproject)
+  #:use-module (guix build-system gnu)
   #:use-module (guix download)
   #:use-module (guix git-download)
   #:use-module (guix packages)
   #:use-module (guix gexp)
   #:use-module (guix build utils)
-  
+
+  #:use-module (gnu packages bash)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages python-build)
   #:use-module (gnu packages version-control)
@@ -17,10 +19,12 @@
   #:use-module (gnu packages inkscape)
   #:use-module (gnu packages image)
   #:use-module (gnu packages python-xyz)
+  #:use-module (gnu packages rust-apps)
 
   #:use-module ((guix licenses) #:prefix license:)
 
   #:use-module (afistfullofash packages utils)
+  #:use-module (afistfullofash packages rust-apps)
   
   #:export (alacritty-catppuccin-theme
 	    alacritty-dracula-theme
@@ -36,7 +40,8 @@
 	    qt5-dracula-theme
 	    starship-catppuccin-theme
 	    starship-dracula-theme
-	    xresources-dracula-theme))
+	    xresources-dracula-theme
+	    xresources-catppuccin-theme))
 
 
 (define alacritty-dracula-theme
@@ -50,8 +55,8 @@
        (origin
 	 (method git-fetch)
 	 (uri (git-reference
-		(url "https://github.com/dracula/alacritty.git")
-		(commit commit)))
+	       (url "https://github.com/dracula/alacritty.git")
+	       (commit commit)))
 	 (file-name (git-file-name name version))
 	 (sha256
 	  (base32
@@ -71,14 +76,14 @@
       (name "alacritty-catppuccin-theme")
       (version (git-version version revision commit))
       (source (origin
-	       (method git-fetch)
-	       (uri (git-reference
+		(method git-fetch)
+		(uri (git-reference
 		      (url "https://github.com/catppuccin/alacritty.git")
 		      (commit commit)))
-	       (file-name (git-file-name name version))
-	       (sha256
-		(base32
-		 "1r2z223hza63v5lmzlg3022mlar67j3a2gh41rsaiqwja2wyiihz"))))
+		(file-name (git-file-name name version))
+		(sha256
+		 (base32
+		  "1r2z223hza63v5lmzlg3022mlar67j3a2gh41rsaiqwja2wyiihz"))))
       (build-system copy-build-system)
       (arguments '(#:install-plan '(("catppuccin-frappe.toml" "/share/themes/catppuccin/alacritty/")
 				    ("catppuccin-latte.toml" "/share/themes/catppuccin/alacritty/")
@@ -98,8 +103,8 @@
       (version (git-version version revision commit))
       (source (origin
 		(uri (git-reference
-		       (url "https://github.com/dracula/dunst.git")
-		       (commit commit)))
+		      (url "https://github.com/dracula/dunst.git")
+		      (commit commit)))
 		(file-name (git-file-name name version))
 		(method git-fetch)
 		(sha256
@@ -121,8 +126,8 @@
       (version (git-version version revision commit))
       (source (origin
 		(uri (git-reference
-		       (url "https://github.com/catppuccin/dunst.git")
-		       (commit commit)))
+		      (url "https://github.com/catppuccin/dunst.git")
+		      (commit commit)))
 		(file-name (git-file-name name version))
 		(method git-fetch)
 		(sha256
@@ -140,11 +145,11 @@
     (name "gtk-dracula-icons")
     (version "0.0.0")
     (source (origin
-	     (method url-fetch/zipbomb)
-	     (uri "https://github.com/dracula/gtk/files/5214870/Dracula.zip")
-	     (sha256
-	      (base32
-	       "1dnc1g1qw9r7glilw1gg11b4f6icfxckkjrj5rhmzzmlxwcjib9k"))))
+	      (method url-fetch/zipbomb)
+	      (uri "https://github.com/dracula/gtk/files/5214870/Dracula.zip")
+	      (sha256
+	       (base32
+		"1dnc1g1qw9r7glilw1gg11b4f6icfxckkjrj5rhmzzmlxwcjib9k"))))
     (build-system copy-build-system)
     (arguments '(#:install-plan '(("Dracula" "share/icons/Dracula"))))
     (home-page "https://draculatheme.com/gtk")
@@ -160,8 +165,8 @@
      (origin
        (method git-fetch)
        (uri (git-reference
-	      (url "https://github.com/dracula/gtk.git")
-	      (commit (string-append "v" version))))
+	     (url "https://github.com/dracula/gtk.git")
+	     (commit (string-append "v" version))))
        (file-name (git-file-name name version))
        (sha256
 	(base32
@@ -187,8 +192,8 @@
        (origin
 	 (method git-fetch)
 	 (uri (git-reference
-		(url "https://github.com/dracula/gtk.git")
-		(commit commit)))
+	       (url "https://github.com/dracula/gtk.git")
+	       (commit commit)))
 	 (file-name (git-file-name "gtk-dracula-theme" commit))
 
 	 (sha256
@@ -281,7 +286,7 @@
 		(for-each (lambda (flavor)
 			    (format #t "Building catppuccin flavor: ~a...~%" flavor)
 			    (unless (zero? (system* python "./build.py" flavor 
-				       "--all-accents" "-d" out))
+						    "--all-accents" "-d" out))
 			      (error (format #f "Failed to build catppuccin flavor ~a" flavour))))
 			  '("mocha" "macchiato" "frappe" "latte")))))
 	  (replace 'install
@@ -320,14 +325,14 @@
       (name "lsd-dracula-theme")
       (version (git-version version revision commit))
       (source (origin
-	       (method git-fetch)
-	       (uri (git-reference
+		(method git-fetch)
+		(uri (git-reference
 		      (url "https://github.com/dracula/lsd.git")
 		      (commit commit)))
-	       (file-name (git-file-name name version))
-	       (sha256
-		(base32
-		 "10id0n5c9jyrah295dv2zahl97851kp24d513k3pyxbsy9nv0qml"))))
+		(file-name (git-file-name name version))
+		(sha256
+		 (base32
+		  "10id0n5c9jyrah295dv2zahl97851kp24d513k3pyxbsy9nv0qml"))))
       (build-system copy-build-system)
       (arguments '(#:install-plan '(("colors.yaml" "/share/themes/Dracula/lsd/")
 				    ("config.yaml" "/share/themes/Dracula/lsd/"))))
@@ -344,14 +349,14 @@
       (name "qt5-dracula-theme")
       (version (git-version version revision commit))
       (source (origin
-	       (method git-fetch)
-	       (uri (git-reference
+		(method git-fetch)
+		(uri (git-reference
 		      (url "https://github.com/dracula/qt5.git")
 		      (commit commit)))
-	       (file-name (git-file-name name version))
-	       (sha256
-		(base32
-		 "00qlajbxj25w1bdhj8wc5r57g25gas6f1ax6wrzb4xcypw0j7xdm"))))
+		(file-name (git-file-name name version))
+		(sha256
+		 (base32
+		  "00qlajbxj25w1bdhj8wc5r57g25gas6f1ax6wrzb4xcypw0j7xdm"))))
       (build-system copy-build-system)
       (arguments '(#:install-plan '(("Dracula.conf" "share/color-schemes/"))))
       (home-page "https://draculatheme.com/qt5")
@@ -367,14 +372,14 @@
       (name "starship-dracula-theme")
       (version (git-version version revision commit))
       (source (origin
-	       (method git-fetch)
-	       (uri (git-reference
+		(method git-fetch)
+		(uri (git-reference
 		      (url "https://github.com/dracula/starship.git")
 		      (commit commit)))
-	       (file-name (git-file-name name version))
-	       (sha256
-		(base32
-		 "13i6alr7djb9h3vzav199i2kkxmzn004815z5cbc41lf7xvx2nc0"))))
+		(file-name (git-file-name name version))
+		(sha256
+		 (base32
+		  "13i6alr7djb9h3vzav199i2kkxmzn004815z5cbc41lf7xvx2nc0"))))
       (build-system copy-build-system)
       (arguments '(#:install-plan '(("starship.theme.toml" "/share/themes/Dracula/starship/")
 				    ("starship.toml" "/share/themes/Dracula/starship/"))))
@@ -391,14 +396,14 @@
       (name "starship-catppuccin-theme")
       (version (git-version version revision commit))
       (source (origin
-	       (method git-fetch)
-	       (uri (git-reference
+		(method git-fetch)
+		(uri (git-reference
 		      (url "https://github.com/catppuccin/starship.git")
 		      (commit commit)))
-	       (file-name (git-file-name name version))
-	       (sha256
-		(base32
-		 "0j3bc9caf6ayg7m8s0hshypgqiiy8bm9kakxwa5ackk955nf7c8l"))))
+		(file-name (git-file-name name version))
+		(sha256
+		 (base32
+		  "0j3bc9caf6ayg7m8s0hshypgqiiy8bm9kakxwa5ackk955nf7c8l"))))
       (build-system copy-build-system)
       (arguments '(#:install-plan '(("starship.toml" "share/themes/catppuccin/starship/")
 				    ("themes/" "share/themes/catppuccin/starship/"))))
@@ -415,16 +420,59 @@
       (name "xresources-dracula-theme")
       (version (git-version version revision commit))
       (source (origin
-	       (uri (git-reference
+		(uri (git-reference
 		      (url "https://github.com/dracula/xresources.git")
 		      (commit commit)))
-	       (file-name (git-file-name name version))
-	       (method git-fetch)
-	       (sha256
-		(base32 "1dkfa2q392vy7ky5kx0vd44xcb9c7x15z38x4acfma3f16q6vyg9"))))
+		(file-name (git-file-name name version))
+		(method git-fetch)
+		(sha256
+		 (base32 "1dkfa2q392vy7ky5kx0vd44xcb9c7x15z38x4acfma3f16q6vyg9"))))
       (build-system copy-build-system)
       (arguments '(#:install-plan '(("Xresources" "/share/themes/Dracula/xresources/"))))
       (home-page "https://draculatheme.com/xresources")
       (description "Dracula theme for Xresources")
       (synopsis "Dracula theme for Xresources")
+      (license license:expat))))
+
+(define xresources-catppuccin-theme
+  (let ((commit "41afcd788311ea2fce124029d9a02e2d65e0b3e6")
+	(version "0.0.0")
+	(revision "0"))
+    (package
+      (name "xresources-catppuccin-theme")
+      (version (git-version version revision commit))
+      (source (origin
+		(uri (git-reference
+		      (url "https://github.com/catppuccin/xresources.git")
+		      (commit commit)))
+		(file-name (git-file-name name version))
+		(method git-fetch)
+		(sha256
+		 (base32 "0mn88af5y8z4riasg045q1xqfblcqv0f56j9fmy8c6f3k1nmzv7m"))))
+      (build-system gnu-build-system)
+      (native-inputs (list whiskers
+			   just
+			   bash-minimal))
+      (arguments
+       (list
+	#:tests? #f ; There are no 'make check' tests
+      #:phases
+      #~(modify-phases %standard-phases
+          ;; 1. Remove phases that require a Makefile/Configure script
+          (delete 'configure)
+          (delete 'check) 
+          ;; 2. Replace 'build' with our just command
+          (replace 'build
+            (lambda* (#:key inputs #:allow-other-keys)
+              (invoke "just" "build")))
+          ;; 3. Replace 'install' to move the generated file
+          (replace 'install
+            (lambda* (#:key outputs #:allow-other-keys)
+              (let ((dest (string-append #$output "/share/themes/catppuccin/Xresources")))
+                (mkdir-p dest)
+                (copy-recursively (string-append "themes/")
+				  dest)))))))
+      (home-page "https://github.com/catppuccin/xresources")
+      (description "Cattapuccin theme for Xresources")
+      (synopsis "Cattapuccin theme for Xresources")
       (license license:expat))))

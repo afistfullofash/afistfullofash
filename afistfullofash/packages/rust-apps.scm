@@ -11,7 +11,8 @@
 
   #:use-module (afistfullofash packages rust-crates)
 
-  #:export (runst))
+  #:export (runst
+	    whiskers))
 
 (define runst
   (package
@@ -40,3 +41,27 @@
     (home-page "https://github.com/orhun/runst")
     (license (list license:expat
 		   license:asl2.0))))
+
+(define whiskers
+  (package
+    (name "whiskers")
+    (version "2.5.1")
+    (source
+     (origin
+	 (method git-fetch)
+	 (uri (git-reference
+	       (url "https://github.com/catppuccin/whiskers.git")
+	       (commit (string-append "v" version))))
+	 (file-name (git-file-name name version))
+	 (sha256
+	  (base32
+	   "0ghgil48c2csr1q82q34mibb5xkv4730m255shpg9b02sg5igc9q"))))
+    (build-system cargo-build-system)
+    (arguments `(#:install-source? #f))
+    (inputs 
+     (cargo-inputs 'whiskers #:module '(afistfullofash packages rust-crates)))
+    (synopsis "Catppuccin Theme Templating Tool")
+    (description
+     "Whiskers is a port creation helper tool that is custom-built for Catppuccin, allowing developers to define template files which the palette can be injected into.")
+    (home-page "https://whiskers.catppuccin.com/")
+    (license license:expat)))
