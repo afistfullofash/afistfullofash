@@ -119,7 +119,7 @@
 
 (define dunst-catppuccin-theme
   (let ((commit "5955cf0213d14a3494ec63580a81818b6f7caa66")
-	(revision "1")
+	(revision "2")
 	(version "0.0.0"))
     (package
       (name "dunst-catppuccin-theme")
@@ -134,7 +134,7 @@
 		 (base32
 		  "1rpxrnhphcxm93s2wc7wbd9cxjmv79r2m6ip0a6rj7lh9v0ps6mc"))))
       (build-system copy-build-system)
-      (arguments '(#:install-plan '(("themes/" "/share/themes/cattapuccin/dunst/"))))
+      (arguments '(#:install-plan '(("themes/" "/share/themes/catppuccin/dunst/"))))
       (home-page "https://github.com/catppuccin/dunst")
       (synopsis " Catppuccin themes for dunst")
       (description "Catppuccin themes for dunst")
