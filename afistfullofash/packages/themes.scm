@@ -28,6 +28,7 @@
   
   #:export (alacritty-catppuccin-theme
 	    alacritty-dracula-theme
+	    bat-catppuccin-theme
 	    dunst-dracula-theme
 	    dunst-catppuccin-theme
 	    gtk-dracula-icons
@@ -94,6 +95,31 @@
       (synopsis "Catppuccin Theme for Alacritty")
       (license license:expat))))
 
+
+
+(define bat-catppuccin-theme
+  (let ((commit "6810349b28055dce54076712fc05fc68da4b8ec0")
+	(version "0.0.0")
+	(revision "0"))
+    (package
+      (name "bat-catppuccin-theme")
+      (version (git-version version revision commit))
+      (source (origin
+		(method git-fetch)
+		(uri (git-reference
+		      (url "https://github.com/catppuccin/bat.git")
+		      (commit commit)))
+		(file-name (git-file-name name version))
+		(sha256
+		 (base32
+		  "1y5sfi7jfr97z1g6vm2mzbsw59j1jizwlmbadvmx842m0i5ak5ll"))))
+      (build-system copy-build-system)
+      (arguments '(#:install-plan '(("themes/" "/share/themes/catppuccin/bat/"))))
+      (home-page "https://github.com/catppuccin/bat")
+      (description "Catppuccin Theme for Bat")
+      (synopsis "Catppuccin Theme for Bat")
+      (license license:expat))))
+
 (define dunst-dracula-theme
   (let ((commit "907f345d81dba9566eff59dd89afb321118da180")
 	(revision "0")
@@ -156,6 +182,58 @@
     (synopsis "Dracula GTK Icons")
     (description "Dracula GTK Icons")
     (license license:gpl3)))
+
+(define catppuccin-icons
+  (let ((commit "f83671d17ea67e335b34f8028a7e6d78bca735d7")
+	(version "0.0.0")
+	(revision "0"))
+    (package
+      (name "catppuccin-icons")
+      (version (git-version version revision commit))
+      (source (origin
+		(method git-fetch)
+		(uri (git-reference
+		      (url "https://github.com/catppuccin/papirus-folders.git")
+		      (commit (string-append "v" version))))
+		(file-name (git-file-name name version))
+		(sha256
+		 (base32
+		  "0p57lpv9023byqy31j5lcv7z0g720as34g11vpffagfdc178dzvq"))))
+      (build-system gnu-build-system)
+      (inputs (list papirus-icon-theme))
+      (arguments
+       (list
+	#:tests? #f
+	#:phases
+	#~(modify-phases %standard-phases
+	    (delete 'configure)
+            (delete 'check) 
+	    (replace 'build
+              lambda* (#:key inputs #:allow-other-keys)
+	      (use-modules (guix build utils))
+	      (let ((papirus-icons (string-append (assoc-ref inputs "papirus-icon-theme")
+						  "/share/icons"))
+		    (papirus-light (string-append papirus-icons "/Papirus-Light"))
+		    (papirus-default (string-append papirus-icons "/Papirus"))
+		    (papirus-dark (string-append papirus-icons "/Papirus-Dark"))
+		    
+		    (papirus-staging-dir "./build/")
+		    (catppuccin-source-dir "./src"))
+		(mkdir out)
+		;; Light theme first
+		(copy-recursively papirus-light papirus-staging-dir)
+		( catppuccin-source-dir papirus-staging-dir)
+		))
+	    (replace 'install
+              (lambda* (#:key outputs #:allow-other-keys)
+		(let ((dest (string-append #$output "share/icons")))
+                  (mkdir-p dest)
+                  (copy-recursively (string-append "themes/")
+				    dest)))))))
+      (home-page "https://draculatheme.com/gtk")
+      (synopsis "Catppuccin Icons")
+      (description "Catppuccin Icons")
+      (license license:gpl3))))
 
 (define gtk-dracula-theme-4
   (package
@@ -456,22 +534,22 @@
       (arguments
        (list
 	#:tests? #f ; There are no 'make check' tests
-      #:phases
-      #~(modify-phases %standard-phases
-          ;; 1. Remove phases that require a Makefile/Configure script
-          (delete 'configure)
-          (delete 'check) 
-          ;; 2. Replace 'build' with our just command
-          (replace 'build
-            (lambda* (#:key inputs #:allow-other-keys)
-              (invoke "just" "build")))
-          ;; 3. Replace 'install' to move the generated file
-          (replace 'install
-            (lambda* (#:key outputs #:allow-other-keys)
-              (let ((dest (string-append #$output "/share/themes/catppuccin/Xresources")))
-                (mkdir-p dest)
-                (copy-recursively (string-append "themes/")
-				  dest)))))))
+	#:phases
+	#~(modify-phases %standard-phases
+            ;; 1. Remove phases that require a Makefile/Configure script
+            (delete 'configure)
+            (delete 'check) 
+            ;; 2. Replace 'build' with our just command
+            (replace 'build
+              (lambda* (#:key inputs #:allow-other-keys)
+		(invoke "just" "build")))
+            ;; 3. Replace 'install' to move the generated file
+            (replace 'install
+              (lambda* (#:key outputs #:allow-other-keys)
+		(let ((dest (string-append #$output "/share/themes/catppuccin/Xresources")))
+                  (mkdir-p dest)
+                  (copy-recursively (string-append "themes/")
+				    dest)))))))
       (home-page "https://github.com/catppuccin/xresources")
       (description "Cattapuccin theme for Xresources")
       (synopsis "Cattapuccin theme for Xresources")
