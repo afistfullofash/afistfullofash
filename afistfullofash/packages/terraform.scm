@@ -11,7 +11,9 @@
 	    opentofu
 	    opentofu-1-11-3
 	    opentofu-1-11-4
-	    opentofu-terraform-wrapper))
+	    opentofu-terraform-wrapper
+	    tofu-ls
+	    tofu-ls-tfls-wrapper))
 
 (define terraform
   (package
@@ -95,3 +97,45 @@
     "This package provides a wrapper for opentofu so if can be invoked by @command{terraform} instead of @{tofu}.
 
 To function properly this package should not be installed together with the @code{opentofu} package: this package uses the @code{opentofu} package as a propagated input, so installing this package already makes @code{tofu} available as a command.")))
+
+(define tofu-ls
+  (package
+   (name "tofu-ls")
+   (version "0.3.1")
+   (source (origin
+             (method url-fetch/tarbomb)
+	     (uri (string-append "https://github.com/opentofu/tofu-ls/releases/download/v" version "/tofu-ls_Linux_x86_64.tar.gz"))
+            (sha256
+             (base32
+	      "17gls2akkdnsc7jx6h784cd624x1z6dfgn1q82h540ki06qjww8a"))))
+   (build-system copy-build-system)
+   (arguments
+    '(#:install-plan '(("tofu-ls" "bin/"))))
+   (home-page "https://github.com/opentofu/tofu-ls")
+   (supported-systems '("x86_64-linux"))
+   (synopsis "The official OpenTofu language server (tofu-ls) maintained by the OpenTofu Core Team provides IDE features to any LSP-compatible editor.")
+   (description
+    "The official OpenTofu language server (tofu-ls) maintained by the OpenTofu Core Team provides IDE features to any LSP-compatible editor.")
+   (license license:mpl2.0)))
+
+(define tofu-ls-tfls-wrapper
+  (package
+    (inherit tofu-ls)
+    (name "tofu-ls-tfls-wrapper")
+    (source #f)
+   (build-system trivial-build-system)
+   (arguments
+    (list #:modules '((guix build utils))
+	  #:builder
+	  #~(begin
+	      (use-modules (guix build utils))
+	      (let ((bin (string-append #$output "/bin"))
+		    (tofu-ls (string-append #$tofu-ls "/bin/tofu-ls")))
+		(mkdir-p bin)
+		(symlink tofu-ls (string-append bin "/tfls"))))))
+   (propagated-inputs (list tofu-ls))
+   (synopsis "Wrapper for tofu-ls around tfls")
+   (description
+    "This package provides a wrapper for tofu-ls so if can be invoked by @command{tfls} instead of @{tofu-ls}.
+
+To function properly this package should not be installed together with the @code{tofu-ls} package: this package uses the @code{tofu-ls} package as a propagated input, so installing this package already makes @code{tofu-ls} available as a command.")))
