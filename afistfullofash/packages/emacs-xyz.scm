@@ -10,8 +10,10 @@
 
   #:use-module ((guix licenses) #:prefix license:)
 
-  #:export (emacs-lsp-scheme
-            emacs-darkman))
+  #:export (emacs-darkman
+	    emacs-lsp-scheme
+	    emacs-just-mode
+	    emacs-just-mode-2026))
 
 (define emacs-lsp-scheme
   (package
@@ -64,3 +66,45 @@
     (description
      "Darkman for Emacs")
     (license license:isc)))
+
+(define emacs-just-mode
+  (package
+    (name "emacs-just-mode")
+    (version "0.1.8")
+    (source
+     (origin
+	 (method git-fetch)
+	 (uri (git-reference
+	       (url "https://github.com/leon-barrett/just-mode.el.git")
+	       (commit version)))
+	 (file-name (git-file-name name version))
+	 (sha256
+	  (base32
+	   "103jwkmg3dphmr885rpbxjp3x8xw45c0zbcvwarkv4bjhph8y4vh"))))
+    (build-system emacs-build-system)
+    (arguments (list
+		#:tests? #f))
+    (home-page "https://github.com/leon-barrett/just-mode.el")
+    (synopsis "Justfile Emacs Major Mode")
+    (description
+     "Justfile Emacs Major Mode")
+    (license license:gpl3)))
+
+(define emacs-just-mode-2026
+  (let ((commit "b6173c7bf4d8d28e0dbd80fa41b9c75626885b4e")
+	(version "2026")
+	(revision "0"))
+    (package
+      (inherit emacs-just-mode)
+      (name "emacs-just-mode")
+      (version (git-version version revision commit))
+      (source
+       (origin
+	 (method git-fetch)
+	 (uri (git-reference
+		(url "https://github.com/leon-barrett/just-mode.el.git")
+		(commit commit)))
+	 (file-name (git-file-name name version))
+	 (sha256
+	  (base32
+	   "1czf779akdcx72ma7x9v70kjbic73312fi1czbzvlvxr01pjpyj0")))))))
