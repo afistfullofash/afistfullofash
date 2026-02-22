@@ -11,6 +11,7 @@
 
   #:use-module (gnu packages bash)
   #:use-module (gnu packages compression)
+  #:use-module (gnu packages gnome-xyz)
   #:use-module (gnu packages python-build)
   #:use-module (gnu packages version-control)
   #:use-module (gnu packages check)
@@ -29,6 +30,7 @@
   #:export (alacritty-catppuccin-theme
 	    alacritty-dracula-theme
 	    bat-catppuccin-theme
+	    catppuccin-papirus-folders-icons
 	    dunst-dracula-theme
 	    dunst-catppuccin-theme
 	    gtk-dracula-icons
@@ -183,24 +185,51 @@
     (description "Dracula GTK Icons")
     (license license:gpl3)))
 
-(define catppuccin-icons
+(define papirus-folders
+  (package
+    (name "papirus-folders")
+    (version "1.14.0")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+	     (url "https://github.com/PapirusDevelopmentTeam/papirus-folders.git")
+	     (commit (string-append "v" version))))
+       (file-name (git-file-name name version))
+       (sha256
+	(base32
+	 "1c7l3vddn0gf8d0dfpickk0k756p7nml5mrvwnjsqdhx9s2dhk56"))))
+    (build-system copy-build-system)
+    (arguments
+     '(#:install-plan
+       '(("papirus-folders" "bin/")
+         ("completion/papirus-folders" "share/bash-completion/completions/")
+	 ("completion/_papirus-folders" "share/zsh/site-functions/")
+	 ("completion/_papirus-folders" "share/zsh/vendor-completions/"))))
+    (home-page "https://github.com/PapirusDevelopmentTeam/papirus-folders")
+    (synopsis "Papirus Icons papirus-folders script")
+    (description "papirus-folders is a handy bash script that lets you change the colors of folders in the Papirus icon theme and similar themes based on version 20171007 or newer. It's an easy way to customize how your folders look.")
+    (license license:expat)))
+
+(define catppuccin-papirus-folders-icons
   (let ((commit "f83671d17ea67e335b34f8028a7e6d78bca735d7")
 	(version "0.0.0")
 	(revision "0"))
     (package
-      (name "catppuccin-icons")
+      (name "catppuccin-papirus-folders-icons")
       (version (git-version version revision commit))
       (source (origin
 		(method git-fetch)
 		(uri (git-reference
 		      (url "https://github.com/catppuccin/papirus-folders.git")
-		      (commit (string-append "v" version))))
+		      (commit commit)))
 		(file-name (git-file-name name version))
 		(sha256
 		 (base32
-		  "0p57lpv9023byqy31j5lcv7z0g720as34g11vpffagfdc178dzvq"))))
+		  "07nr8x9r4ndwywqd92a5gpcb2mid6map24s6wjz18chs7g1ms9hn"))))
       (build-system gnu-build-system)
-      (inputs (list papirus-icon-theme))
+      (inputs (list papirus-folders))
+      (propagated-inputs (list papirus-icon-theme))
       (arguments
        (list
 	#:tests? #f
@@ -209,31 +238,100 @@
 	    (delete 'configure)
             (delete 'check) 
 	    (replace 'build
-              lambda* (#:key inputs #:allow-other-keys)
-	      (use-modules (guix build utils))
-	      (let ((papirus-icons (string-append (assoc-ref inputs "papirus-icon-theme")
-						  "/share/icons"))
-		    (papirus-light (string-append papirus-icons "/Papirus-Light"))
-		    (papirus-default (string-append papirus-icons "/Papirus"))
-		    (papirus-dark (string-append papirus-icons "/Papirus-Dark"))
-		    
-		    (papirus-staging-dir "./build/")
-		    (catppuccin-source-dir "./src"))
-		(mkdir out)
-		;; Light theme first
-		(copy-recursively papirus-light papirus-staging-dir)
-		( catppuccin-source-dir papirus-staging-dir)
-		))
+              (lambda* (#:key inputs #:allow-other-keys)
+		(use-modules (guix build utils))
+		(let* ((papirus-icons (string-append
+				      (assoc-ref inputs "papirus-icon-theme")
+				      "/share/icons/"))
+		      
+		      (papirus-folders (string-append
+					(assoc-ref inputs "papirus-folders")
+					"/bin/papirus-folders"))
+
+		      (papirus-varients (list "Papirus"
+					      "Papirus-Dark"
+					      "Papirus-Light"))
+
+		      (catppuccin-themes (list "latte"
+						"frappe"
+						"macchiato"
+						"mocha"))
+
+		      (catppuccin-colors (list "rosewater"
+					       "maroon"
+					       "pink"
+					       "teal"
+					       "peach"
+					       "sapphire"
+					       "red"
+					       "flamingo"
+					       "green"
+					       "mauve"
+					       "sky"
+					       "yellow"
+					       "blue"
+					       "lavender"))
+
+		      (build-root (getcwd))
+		      (build-dir (string-append build-root "/.icons/"))
+		      (dist-dir (string-append build-root "/dist/"))
+		      (catppuccin-source-dir (string-append build-root "/src")))
+		  ;; Papirus Folders uses this to work out where
+		  ;; The theme directory is
+		  (setenv "USER_HOME" build-root)
+		  
+		  (mkdir dist-dir)
+                  
+		  (map
+		   (lambda (papirus-theme-name)
+		     (map
+		      (lambda (catppuccin-theme-name)
+                        (map
+			 (lambda (catppuccin-color-name)
+                           (let ((papirus-build-dir
+				  (string-append build-dir
+						 papirus-theme-name))
+				 (catppuccin-icon-theme-name
+				  (string-append "cat-"
+						 catppuccin-theme-name
+						 "-"
+						 catppuccin-color-name)))
+			     (mkdir-p build-dir)
+                             ;; Merge the theme directories
+			     ;; Do this clean every run
+			     (copy-recursively papirus-icons build-dir)
+			     (copy-recursively catppuccin-source-dir papirus-build-dir)
+                             
+			     (invoke papirus-folders
+				     "-C"
+				     catppuccin-icon-theme-name
+				     "--theme"
+				     papirus-theme-name)
+                             
+			     ;; Copy the theme to a built dir
+			     (copy-recursively papirus-build-dir
+					       (string-append
+						dist-dir
+						catppuccin-icon-theme-name
+						"-"
+						papirus-theme-name))
+			     ;; Clean Up after ourselves
+			     (delete-file-recursively build-dir)))
+			 catppuccin-colors))
+		      catppuccin-themes))
+		   papirus-varients))))
 	    (replace 'install
               (lambda* (#:key outputs #:allow-other-keys)
-		(let ((dest (string-append #$output "share/icons")))
-                  (mkdir-p dest)
-                  (copy-recursively (string-append "themes/")
-				    dest)))))))
-      (home-page "https://draculatheme.com/gtk")
-      (synopsis "Catppuccin Icons")
-      (description "Catppuccin Icons")
-      (license license:gpl3))))
+		(let ((out (string-append #$output "/share/icons")))
+                  (mkdir-p out)
+                  (copy-recursively (string-append (getcwd) "/dist/")
+				    out)))))))
+      (home-page "https://github.com/catppuccin/papirus-folders")
+      (synopsis "Catppuccin for Papirus Folders Icons")
+      (description " Catppuccin for Papirus Folders Icons.
+
+Please note that this also brings in the papirus-icons-theme package with it as a propogated input")
+      (license license:expat))))
 
 (define gtk-dracula-theme-4
   (package
