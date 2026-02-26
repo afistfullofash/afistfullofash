@@ -20,8 +20,10 @@
   #:use-module (gnu packages xdisorg)
   
   #:export (stumpwm-extension-builder
+	    stumpwm-with-message-hide-hook
 	    stumpwm-with-user-extensions
-	      mahogany))
+	    stumpwm-with-message-hide-hook-with-user-extensions
+	    mahogany))
 
 (define %default-stumpwm-extensions
   `((,sbcl-trivia . "trivia")
@@ -34,14 +36,29 @@
     (,sbcl-clx-truetype . "clx-truetype")
     (,sbcl-slynk . "slynk")))
 
-(define-public (stumpwm-extension-builder extensions)
+(define-public stumpwm-with-message-hide-hook
+  (let ((commit "ee2b897944988f8839d86f5ec7b7b33f68349929"))
+    (package
+      (inherit stumpwm)
+      (source 
+       (origin
+	 (method git-fetch)
+	 (uri (git-reference
+	       (url "https://github.com/afistfullofash/stumpwm.git")
+	       (commit commit)))
+	 (file-name (git-file-name "stumpwm-with-message-hide-hook" commit))
+	 (sha256
+	  (base32
+	   "1w1n7kknbbpwvm5v6lzh46jhxw34fk8x8ixylhmh07qfrmcv6j1s")))))))
+
+(define-public (stumpwm-extension-builder stumpwm-package package-name extensions)
   (let ((extension-packages (map car extensions))
 	(extension-systems (map cdr extensions)))
     (package
-      (inherit stumpwm)
-      (name "stumpwm-with-extensions")
-      (inputs
-       (append (list stumpwm)
+      (inherit stumpwm-package)
+      (name package-name)
+      (propagated-inputs
+       (append (list stumpwm-package)
 	       extension-packages))
       (native-inputs
        (list pkg-config
@@ -77,8 +94,14 @@
              (delete 'cleanup))))))))
 
 (define-public stumpwm-with-user-extensions
-  (stumpwm-extension-builder %default-stumpwm-extensions))
+  (stumpwm-extension-builder stumpwm
+			     "stumpwm-with-extensions"
+			     %default-stumpwm-extensions))
 
+(define-public stumpwm-with-message-hide-hook-with-user-extensions
+  (stumpwm-extension-builder stumpwm-with-message-hide-hook
+			     "stumpwm-with-message-hide-hook-with-user-extensions"
+			     %default-stumpwm-extensions))
 
 (define-public mahogany
   (let ((commit "1b9879021c95c36ed0740c3fb875134c762bf3a8")
@@ -96,6 +119,7 @@
 		(sha256
 		 (base32 "1z5gm7ibr1w72vbx6qdhaaxjfjbljwivqsz8l1zsdgz6biaw2m1v"))))
       (build-system asdf-build-system/sbcl)
+
       (native-inputs
        (list sbcl-fiasco
              sbcl-prove))
@@ -207,3 +231,5 @@ language. is a tiling window manager for Wayland modeled after
 StumpWM.")
     (home-page (package-home-page mahogany))
     (license (package-license mahogany))))
+
+stumpwm-with-message-hide-hook-with-user-extensions
