@@ -231,5 +231,3 @@ language. is a tiling window manager for Wayland modeled after
 StumpWM.")
     (home-page (package-home-page mahogany))
     (license (package-license mahogany))))
-
-stumpwm-with-message-hide-hook-with-user-extensions
