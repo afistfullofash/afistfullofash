@@ -33,6 +33,7 @@
 	    catppuccin-papirus-folders-icons
 	    dunst-dracula-theme
 	    dunst-catppuccin-theme
+	    dunst-catppuccin-theme-with-accents
 	    gtk-dracula-icons
 	    gtk-dracula-theme
 	    gtk-dracula-theme-4
@@ -161,12 +162,52 @@
 		(sha256
 		 (base32
 		  "1rpxrnhphcxm93s2wc7wbd9cxjmv79r2m6ip0a6rj7lh9v0ps6mc"))))
-      (build-system copy-build-system)
-      (arguments '(#:install-plan '(("themes/" "/share/themes/catppuccin/dunst/"))))
+      (build-system gnu-build-system)
+        (native-inputs (list catppuccin-whiskers))
+    (arguments
+       (list
+	#:tests? #f ; There are no 'make check' tests
+	#:phases
+	#~(modify-phases %standard-phases
+            ;; 1. Remove phases that require a Makefile/Configure script
+            (delete 'configure)
+            (delete 'check) 
+            ;; 2. Replace 'build' with our just command
+            (replace 'build
+              (lambda* (#:key inputs #:allow-other-keys)
+		;; This has precompiled versions
+		;; Remove them and compile from scratch
+		(delete-file-recursively "themes")
+		(invoke "whiskers" "dunst.tera")))
+            ;; 3. Replace 'install' to move the generated file
+            (replace 'install
+              (lambda* (#:key outputs #:allow-other-keys)
+		(let ((dest (string-append #$output "/share/themes/catppuccin/dunst")))
+                  (mkdir-p dest)
+                  (copy-recursively "themes"
+				    dest)))))))
       (home-page "https://github.com/catppuccin/dunst")
       (synopsis " Catppuccin themes for dunst")
       (description "Catppuccin themes for dunst")
       (license license:expat))))
+
+(define dunst-catppuccin-theme-with-accents
+  (let ((commit "3061a4f4c9d39e5b632bd17461ba9d3688d2bcfc")
+	(revision "0")
+	(version "0.0.0"))
+    (package
+      (inherit dunst-catppuccin-theme)
+      (name "dunst-catppuccin-theme")
+      (version (git-version version revision commit))
+      (source (origin
+		(uri (git-reference
+		      (url "https://github.com/afistfullofash/catppuccin-dunst.git")
+		      (commit commit)))
+		(file-name (git-file-name name version))
+		(method git-fetch)
+		(sha256
+		 (base32
+		  "0bd6gdz54zllakqhj8qdavl97ag12bvsw11nymqgyj7fnp4dxqrg")))))))
 
 (define gtk-dracula-icons
   (package
