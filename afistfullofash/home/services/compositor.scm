@@ -33,10 +33,11 @@
                              #~(let* ((home (or (getenv "HOME") ""))
                                       (state (or (getenv "XDG_STATE_HOME")
                                                  (string-append home "/.local/state")))
+				      (config (string-append home "/.config/picom/picom.conf"))
                                       (log  (string-append state "/log/picom.log")))
                                  (make-forkexec-constructor
                                   (list #$(file-append picom "/bin/picom")
-                                        "--backend" "glx" "--vsync" "--transparent-clipping" "--blur-background" "--blur-background-frame" "--blur-method" "dual_kawase" "--blur-size" "1" "--blur-deviation" "1.0" "--opacity-rule" "85:class_g = \"Alacritty\"")
+					"--config" config)
                                   #:log-file log)))
                             (stop #~(make-kill-destructor))))))))
    (default-value #f)))
