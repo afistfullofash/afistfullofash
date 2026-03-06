@@ -4,10 +4,13 @@
   #:use-module (gnu home services)
   #:use-module (gnu home services shepherd)
   #:use-module (guix gexp)
+  #:use-module (guix modules)
   #:use-module (srfi srfi-1)
   #:use-module (ice-9 match)
 
+  #:use-module (gnu packages wm)
   #:use-module (gnu packages mail)
+    
   #:use-module (afistfullofash home utils)
   #:use-module (afistfullofash packages mail)
   
@@ -23,29 +26,50 @@
 		 (gmi-bin (file-append lieer "/bin/gmi"))
 		 (mbsync-bin (file-append isync "/bin/mbsync"))
 		 (notmuch-bin (file-append notmuch "/bin/notmuch"))
-		 (afew-bin (file-append afew "/bin/afew")))
+		 (afew-bin (file-append afew "/bin/afew"))
+		 (dunstify (file-append dunst "/bin/dunstify"))
+		 (send-notification
+		  (lambda (title message)
+		    (system* #$dunstify "-a" title "-u" "info" message)))
+		 (send-error-notification
+		  (lambda (title message)
+		    (system* #$dunstify "-a" title "-u" "critical" message))))
 	    #~(begin
+		(use-modules (afistfullofash home utils))
+		
 		(unless (zero? (system* #$gmi-bin "pull" "-C" #$work-mail-dir))
-		  (error "Lieer pull failed"))
+		  (begin (send-error-notification "Email Sync" "gmi pull failed")
+			 (error "Lieer pull failed")))
 		
 		(unless (zero? (system* #$mbsync-bin "-a" "--pull"))
-		  (error "mbsync pull failed"))
+		  (begin
+		    (send-error-notification "Email Sync" "mbsync pull failed")
+		    (error "mbsync pull failed")))
 
 		(unless (zero? (system* #$notmuch-bin "new"))
-		  (error "Notmuch indexing failed"))
+		  (begin
+		    (send-error-notification "Email Sync" "notmuch new failed")
+		    (error "Notmuch indexing failed")))
 
 		(unless (zero? (system* #$afew-bin
 					"--notmuch-config"
 					#$notmuch-config-file
 					"--tag"
 					"--new"))
-		  (error "Afew Tagging failed"))
+		  (begin
+		    (send-error-notification "Email Sync" "afew tagging failed")
+		    (error "Afew Tagging failed")))
 
 		(unless (zero? (system* #$gmi-bin "push" "-C" #$work-mail-dir))
-		  (error "Lieer push failed"))
+		  (begin
+		    (send-error-notification "Email Sync" "gmi push failed")
+		    (error "Lieer push failed")))
 
 		(unless (zero? (system* #$mbsync-bin "-a" "--push"))
-		  (error "mbsync push failed")))))))
+		  (begin
+		    (send-error-notification "Email Sync" "mbsync push failed")
+		    (error "mbsync push failed")))
+		(send-notification #$dunstify "Email Sync" "sync completed"))))))
     (shepherd-timer '(mail-sync)
 		    "*/2 * * * *"
 		    #~(#$email-sync-script)
