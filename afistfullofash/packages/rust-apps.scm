@@ -4,15 +4,22 @@
   #:use-module (guix git-download)
   #:use-module ((guix licenses) #:prefix license:)
   #:use-module (guix build-system cargo)
-  #:use-module (gnu packages pkg-config)
+
+  
+  #:use-module (gnu packages databases)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages glib)
   #:use-module (gnu packages gtk)
+  #:use-module (gnu packages pkg-config)
+  #:use-module (gnu packages sqlite)
+  #:use-module (gnu packages tls)
+
 
   #:use-module (afistfullofash packages rust-crates)
 
   #:export (runst
-	    whiskers))
+	    whiskers
+	    diesel-cli))
 
 (define runst
   (package
@@ -65,3 +72,32 @@
      "Whiskers is a port creation helper tool that is custom-built for Catppuccin, allowing developers to define template files which the palette can be injected into.")
     (home-page "https://whiskers.catppuccin.com/")
     (license license:expat)))
+
+(define diesel-cli
+  (package
+    (name "diesel-cli")
+    (version "2.3.6")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (crate-uri "diesel_cli" version))
+       (file-name (string-append name "-" version ".tar.gz"))
+       (sha256
+        (base32 "1gfwzz81w3nhpmj7m3gzi5l55k7finsz4pawz6w5lg64ihqwxysp"))))
+    (build-system cargo-build-system)
+    (inputs
+     (append
+      (list zlib
+	    pkg-config
+	    mysql
+	    postgresql
+	    sqlite
+	    openssl)
+      (cargo-inputs 'diesel-cli #:module '(afistfullofash packages rust-crates))))
+    (arguments
+     (list
+      #:tests? #f))
+    (home-page "https://diesel.rs")
+    (synopsis "Provides the CLI for the Diesel crate")
+    (description "This package provides the CLI for the Diesel crate.")
+    (license (list license:expat license:asl2.0))))
