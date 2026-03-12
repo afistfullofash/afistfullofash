@@ -106,7 +106,7 @@
 (define digikam-wallpaper
   (package
     (name "digikam-wallpaper")
-    (version "0.1.1")
+    (version "0.2.0")
     (source
      (origin
        (method git-fetch)
@@ -116,7 +116,7 @@
        (file-name (git-file-name name version))
        (sha256
 	(base32
-	 "19fg6vw8n3dxvkm3x56j89wj4q5dwf5y4qg71cq2rngmbkq6pggh"))))
+	 "0xhgd1l73bl727yb0ik7wyllypqvzhmdvra2v2l68jmmrv9xmwlr"))))
     (build-system cargo-build-system)
     (inputs (append
 	     (list sqlite)
@@ -128,4 +128,3 @@
     (synopsis "Wallpaper Setting application leveraging digikam.")
     (description "Wallpaper Setting application leveraging digikam.")
     (license license:expat)))
-
