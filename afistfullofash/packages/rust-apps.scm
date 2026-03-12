@@ -19,7 +19,8 @@
 
   #:export (runst
 	    whiskers
-	    diesel-cli))
+	    diesel-cli
+	    digikam-wallpaper))
 
 (define runst
   (package
@@ -101,3 +102,30 @@
     (synopsis "Provides the CLI for the Diesel crate")
     (description "This package provides the CLI for the Diesel crate.")
     (license (list license:expat license:asl2.0))))
+
+(define digikam-wallpaper
+  (package
+    (name "digikam-wallpaper")
+    (version "0.1.1")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+	     (url "https://github.com/afistfullofash/rust-digikam-orm.git")
+	     (commit (string-append "v" version))))
+       (file-name (git-file-name name version))
+       (sha256
+	(base32
+	 "19fg6vw8n3dxvkm3x56j89wj4q5dwf5y4qg71cq2rngmbkq6pggh"))))
+    (build-system cargo-build-system)
+    (inputs (append
+	     (list sqlite)
+	     (cargo-inputs 'digikam-wallpaper #:module '(afistfullofash packages rust-crates))))
+    (arguments
+     (list
+      #:tests? #f))
+    (home-page "https://github.com/afistfullofash/rust-digikam-orm")
+    (synopsis "Wallpaper Setting application leveraging digikam.")
+    (description "Wallpaper Setting application leveraging digikam.")
+    (license license:expat)))
+
