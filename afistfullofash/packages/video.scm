@@ -13,7 +13,15 @@
   #:use-module (gnu packages python-xyz)
   #:use-module (gnu packages video)
   
-  #:export (motioneye))
+  #:export (motion-with-ffmpeg4
+	    motioneye))
+
+(define motion-with-ffmpeg4
+  (package
+    (inherit motion)
+    (inputs
+     (modify-inputs (package-inputs motion)
+       (replace "ffmpeg" ffmpeg-4)))))
 
 (define motioneye
   (package
@@ -35,7 +43,7 @@
                              python-pillow
                              python-pycurl
                              python-tornado-6.5
-			     motion))
+			     motion-with-ffmpeg4))
     (native-inputs (list python-setuptools))
     (home-page "https://github.com/motioneye-project/motioneye")
     (synopsis "motioneye, a multilingual web interface for motion.")
