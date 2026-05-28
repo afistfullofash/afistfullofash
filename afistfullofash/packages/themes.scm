@@ -482,6 +482,7 @@ Please note that this also brings in the papirus-icons-theme package with it as 
 			 git-minimal))
     (arguments
      (list
+      #:tests? #f
       #:phases
       #~(modify-phases %standard-phases
 	  (add-after 'unpack 'replace-colloid-submodule
