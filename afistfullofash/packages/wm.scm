@@ -37,7 +37,7 @@
     (,sbcl-slynk . "slynk")))
 
 (define-public stumpwm-with-message-hide-hook
-  (let ((commit "824e9a14ca6b4da7759d94115c24465a90340fb4"))
+  (let ((commit "af26309a60d132a3e25d8cfad4062ef72d7e713b"))
     (package
       (inherit stumpwm)
       (source 
@@ -49,7 +49,7 @@
 	 (file-name (git-file-name "stumpwm-with-message-hide-hook" commit))
 	 (sha256
 	  (base32
-	   "1bw9wdlacyrr6rpc3rlzy9jfkc1ni5cg4527xdjsyxwn18q1zxz5")))))))
+	   "1js8z5j4ifxs8rbgpyahp1nr86ca7dsl5i2lqwca2zil376pnslj")))))))
 
 (define-public (stumpwm-extension-builder stumpwm-package package-name extensions)
   (let ((extension-packages (map car extensions))
