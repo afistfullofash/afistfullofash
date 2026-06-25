@@ -16,7 +16,7 @@
   
   #:export (mtkclient))
 
-(define mtkclient
+(define-public mtkclient
   (package
     (name "mtkclient")
     (version "2.1.4.1")
@@ -64,5 +64,3 @@
     (description
      "Mediatek Flash and Repair Utility")
     (license license:gpl3)))
-
-mtkclient
