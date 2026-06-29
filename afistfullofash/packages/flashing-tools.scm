@@ -57,9 +57,12 @@
 	   python-shiboken-6
 	   python-pyside-6
 	   python-pyserial
-	   python-mfusepy))
+	   python-mfusepy
+	   fuse-2))
     (home-page "https://github.com/bkerler/mtkclient")
     (synopsis "Mediatek Flash and Repair Utility")
     (description
      "Mediatek Flash and Repair Utility")
     (license license:gpl3)))
+
+mtkclient
