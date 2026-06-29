@@ -49,7 +49,7 @@
            python-pytest
            python-setuptools
 	   python-hatchling))
-    (inputs
+    (propagated-inputs
      (list python-pyusb
 	   python-pycryptodome
 	   python-pycryptodomex
@@ -57,8 +57,7 @@
 	   python-shiboken-6
 	   python-pyside-6
 	   python-pyserial
-	   python-mfusepy
-	   fuse))
+	   python-mfusepy))
     (home-page "https://github.com/bkerler/mtkclient")
     (synopsis "Mediatek Flash and Repair Utility")
     (description
