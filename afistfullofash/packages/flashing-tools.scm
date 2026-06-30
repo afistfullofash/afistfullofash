@@ -36,14 +36,7 @@
       #:phases
       ; Shiboken6/PySide6 lack standard .dist-info metadata, breaking automated checks
       #~(modify-phases %standard-phases
-	  (delete 'sanity-check)
-	  (add-after 'wrap 'wrap-binary-fuse-search-path
-            (lambda* (#:key inputs #:allow-other-keys)
-              (let ((out (assoc-ref %outputs "out"))
-                    (fuse (assoc-ref inputs "fuse")))
-		(wrap-program (string-append out "/bin/mtk") ; Or wherever your binary is
-		  `("LD_LIBRARY_PATH" prefix (,(string-append fuse "/lib"))))))))
-))
+	  (delete 'sanity-check))))
     (native-inputs
      (list python-certifi
            python-pytest
@@ -57,7 +50,7 @@
 	   python-shiboken-6
 	   python-pyside-6
 	   python-pyserial
-	   python-mfusepy
+	   python-fusepy
 	   fuse-2))
     (home-page "https://github.com/bkerler/mtkclient")
     (synopsis "Mediatek Flash and Repair Utility")
