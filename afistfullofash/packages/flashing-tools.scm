@@ -16,7 +16,8 @@
   #:use-module (afistfullofash packages python-xyz)
   
   #:export (mtkclient
-	    mtkclient-udev-rules))
+	    mtkclient-udev-rules
+	    mtkclient-udev-service))
 
 (define-public mtkclient
   (package
@@ -72,3 +73,7 @@
     (description
      "This package provides a set of udev rules for mediatek devices.")
     (license license:expat)))
+
+(define-public mtkclient-udev-service
+  (udev-rules-service 'mtkclient mtkclient-udev-rules
+                       #:groups '("plugdev")))
