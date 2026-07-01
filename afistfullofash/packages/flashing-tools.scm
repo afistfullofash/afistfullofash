@@ -16,8 +16,7 @@
   #:use-module (afistfullofash packages python-xyz)
   
   #:export (mtkclient
-	    mtkclient-udev-rules
-	    mtkclient-udev-service))
+	    mtkclient-udev-rules))
 
 (define-public mtkclient
   (package
@@ -71,9 +70,14 @@
                          #:include-regexp ("rules$")))))
     (synopsis "udev rules for mediatek devices")
     (description
-     "This package provides a set of udev rules for mediatek devices.")
+     "This package provides a set of udev rules for mediatek devices.
+To use @code{mtkclient} without root privileges it is necessary to install the
+necessary udev rules.  This can be done by extending @code{udev-service-type}
+in the @code{operating-system} configuration file with this package, as in:
+@lisp
+(udev-rules-service 'mtkclient mtkclient #:groups '(\"plugdev\")
+@end lisp
+Additionally, the @samp{plugdev} group should be registered in the
+@code{supplementary-groups} field of your @code{user-account}
+declaration. Refer to @samp{info \"(guix) Base Services\"} for examples.")
     (license license:expat)))
-
-(define-public mtkclient-udev-service
-  (udev-rules-service 'mtkclient mtkclient-udev-rules
-                       #:groups '("plugdev")))
