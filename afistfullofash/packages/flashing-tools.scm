@@ -2,6 +2,7 @@
   #:use-module (guix packages)
   #:use-module (guix git-download)
   #:use-module (guix build-system pyproject)
+  #:use-module (guix build-system copy)
   #:use-module (guix gexp)
   #:use-module ((guix licenses) #:prefix license:)
   
@@ -14,7 +15,8 @@
   #:use-module (gnu packages linux)
   #:use-module (afistfullofash packages python-xyz)
   
-  #:export (mtkclient))
+  #:export (mtkclient
+	    mtkclient-udev-rules))
 
 (define-public mtkclient
   (package
@@ -34,7 +36,6 @@
      (list
       #:tests? #f
       #:phases
-      ; Shiboken6/PySide6 lack standard .dist-info metadata, breaking automated checks
       #~(modify-phases %standard-phases
 	  (delete 'sanity-check))))
     (native-inputs
@@ -58,4 +59,16 @@
      "Mediatek Flash and Repair Utility")
     (license license:gpl3)))
 
-mtkclient
+(define-public mtkclient-udev-rules
+  ;; Last release from 2019-04-10
+  (package
+    (inherit mtkclient)
+    (name "mtkclient-udev-rules")
+    (build-system copy-build-system)
+    (arguments
+     '(#:install-plan '(("./Setup/Linux" "lib/udev/rules.d"
+                         #:include-regexp ("rules$")))))
+    (synopsis "udev rules for mediatek devices")
+    (description
+     "This package provides a set of udev rules for mediatek devices.")
+    (license license:expat)))
