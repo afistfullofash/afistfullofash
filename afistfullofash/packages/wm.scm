@@ -16,7 +16,7 @@
   #:use-module (gnu packages lisp-xyz)
   #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages texinfo)
-  #:use-module (gnu packages wm)
+  #:use-module (gnu packages window-management)
   #:use-module (gnu packages xdisorg)
   
   #:export (stumpwm-extension-builder
