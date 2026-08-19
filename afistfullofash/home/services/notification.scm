@@ -5,7 +5,7 @@
   #:use-module (gnu home services)
   #:use-module (gnu home services shepherd)
 
-  #:use-module (gnu packages wm)
+  #:use-module (gnu packages window-management)
   #:use-module (gnu packages base)
   #:use-module (gnu packages guile-xyz)
   
