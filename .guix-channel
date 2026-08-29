@@ -4,6 +4,7 @@
 (channel
  (version 0)
  (url "https://github.com/afistfullofash/afistfullofash")
+ (keyring-reference "keyring")
  (dependencies
     (channel
       (name nonguix)
