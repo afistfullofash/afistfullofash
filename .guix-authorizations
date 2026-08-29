@@ -1,0 +1,9 @@
+;;; SPDX-License-Identifier: GPL-3.0-or-later
+;; This is the list of OpenPGP keys currently authorized to sign commits in
+;; this repository.
+
+(authorizations
+ (version 0)
+
+ (("885C AB94 3976 5DF8 B71E  CC94 9A9C A995 77AE 3ACA"
+   (name "Natalie Atkinson"))))
